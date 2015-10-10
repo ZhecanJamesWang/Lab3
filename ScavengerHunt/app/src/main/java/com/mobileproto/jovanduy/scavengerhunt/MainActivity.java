@@ -1,9 +1,10 @@
-package com.mobileproto.jovanduy.scavengerhunt;
+    package com.mobileproto.jovanduy.scavengerhunt;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+    import android.support.v7.app.AppCompatActivity;
+    import android.support.v4.app.Fragment;
+    import android.os.Bundle;
+    import android.view.Menu;
+    import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -11,6 +12,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        MainActivityFragment mainactivityfragment = new MainActivityFragment();
+        transitionToFragment(mainactivityfragment);
     }
 
 
@@ -35,4 +38,14 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void transitionToFragment(Fragment fragment) {
+        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.container, fragment);
+        transaction.commit();
+    }
+
+
+
 }
