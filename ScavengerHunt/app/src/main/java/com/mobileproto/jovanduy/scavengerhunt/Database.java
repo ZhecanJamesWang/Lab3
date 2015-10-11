@@ -19,6 +19,7 @@ public class Database {
     static final String KEY_ID = "AKIAISEFKD6O3QSZGHUQ";
     static final String SECRET_KEY = "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";
 
+
     public void ConnectToDb() {
         Connection conn = null;
         Statement stmt = null;
