@@ -2,8 +2,11 @@ package com.mobileproto.jovanduy.scavengerhunt;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -11,6 +14,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        S3Download s3Download = new S3Download(getApplicationContext());
+        File file = new File(getApplicationContext().getFilesDir(), "vid1");
+        s3Download.downloadFile("MVI_3146.MOV", file);
+        Log.d("STUFF", file.toString());
     }
 
 

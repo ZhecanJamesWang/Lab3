@@ -16,7 +16,7 @@ import java.io.InputStream;
 /**
  * Created by Jordan on 10/8/15.
  */
-public class S3Service extends AsyncTask<Void, Void, Void> {
+public class S3Upload extends AsyncTask<Void, Void, Void> {
 
     static final String BUCKET_NAME = "olin-mobile-proto";
 
@@ -24,21 +24,16 @@ public class S3Service extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
 
-        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-                getContext(),
-                "MY-IDENTITY-POOL-ID",
-                Regions.SELECT_YOUR_REGION
-        );
 
-        AmazonS3Client s3Client = new AmazonS3Client(credentialsProvider);
-        File fileToUpload = YOUR_FILE;
-        PutObjectRequest putRequest = new PutObjectRequest(BUCKET_NAME, "MY-OBJECT-KEY", fileToUpload);
-        PutObjectResult putResponse = s3Client.putObject(putRequest);
+        AmazonS3Client s3Client = new AmazonS3Client();
+//        File fileToUpload = new File(File file"stuff");
+//        PutObjectRequest putRequest = new PutObjectRequest(BUCKET_NAME, "MY-OBJECT-KEY", fileToUpload);
+//        PutObjectResult putResponse = s3Client.putObject(putRequest);
         GetObjectRequest getRequest = new GetObjectRequest(BUCKET_NAME, "MY-OBJECT-KEY");
         S3Object getResponse = s3Client.getObject(getRequest);
         InputStream myObjectBytes = getResponse.getObjectContent();
 
         // myObjectBytes.close();
-
+        return null;
     }
 }
