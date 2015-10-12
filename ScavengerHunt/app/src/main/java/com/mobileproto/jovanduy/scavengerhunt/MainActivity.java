@@ -14,9 +14,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        S3Download s3Download = new S3Download(getApplicationContext());
+        S3Service s3Service = new S3Service(getApplicationContext());
         File file = new File(getApplicationContext().getFilesDir(), "vid1");
-        s3Download.downloadFile("MVI_3146.MOV", file);
+        s3Service.downloadFile("MVI_3146.MOV", file);
         Log.d("STUFF", file.toString());
     }
 
