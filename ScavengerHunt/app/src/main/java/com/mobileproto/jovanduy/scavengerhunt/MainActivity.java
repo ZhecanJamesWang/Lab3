@@ -10,14 +10,15 @@ import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
+    public VideoFragment videoFragment = new VideoFragment();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        S3Service s3Service = new S3Service(getApplicationContext());
-        File file = new File(getApplicationContext().getFilesDir(), "vid1");
-        s3Service.downloadFile("MVI_3146.MOV", file);
-        Log.d("STUFF", file.toString());
+
+        videoFragment.setArguments(getIntent().getExtras());
+        getSupportFragmentManager().beginTransaction().add(R.id.container, videoFragment).commit();
     }
 
 

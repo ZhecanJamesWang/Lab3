@@ -1,13 +1,19 @@
 package com.mobileproto.jovanduy.scavengerhunt;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 
 import java.io.File;
+import java.net.URL;
+import java.util.Date;
 
 /**
  * Created by Jordan on 10/12/15.
@@ -20,10 +26,13 @@ public class S3Service {
     public Context context;
     public AmazonS3 s3;
     public TransferUtility transferUtility;
+    AWSCredentials credentials;
 
     public S3Service(Context context) {
         this.context = context;
-        this.s3 = new AmazonS3Client();
+        this.credentials = new BasicAWSCredentials(ACCESS_KEY, SECRET_KEY);
+        this.s3 = new AmazonS3Client(credentials);
+//        this.s3 = new AmazonS3Client();
         this.transferUtility = new TransferUtility(s3, context);
     }
 
@@ -31,8 +40,18 @@ public class S3Service {
         TransferObserver observer = transferUtility.upload(BUCKET_NAME, key, file);
     }
 
-    public void downloadFile(String key, File file) {
+    public URL downloadFile(String key, File file) {
         TransferObserver observer = transferUtility.download(BUCKET_NAME, key, file);
+        Log.d("STUFFFF", Integer.toString(observer.getId()));
+        GeneratePresignedUrlRequest urlRequest = new GeneratePresignedUrlRequest(BUCKET_NAME, key);
+        urlRequest.setExpiration(new Date(System.currentTimeMillis() + 3600000));  // Added an hour's worth of milliseconds to the current time.
+        //urlRequest.setResponseHeaders(override);
+        URL url = s3.generatePresignedUrl( urlRequest );
+
+
+
+
+        return url;
     }
 
 //    @Override
