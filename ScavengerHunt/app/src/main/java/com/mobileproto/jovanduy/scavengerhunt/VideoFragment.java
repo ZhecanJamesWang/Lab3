@@ -42,9 +42,9 @@ public class VideoFragment extends Fragment {
 //        Uri video = Uri.fromFile(file);
 //        new S3Download(getContext()).execute(video);
         S3Service s3Service = new S3Service(getContext());
-        final File file = new File(getContext().getFilesDir(), "vid1");
-        URL url = s3Service.downloadFile("MVI_3146.MOV", file);
-        Log.d("URL!!!", url.toString());
+//        File file = new File(getContext().getFilesDir(), "vid1");
+//        URL url = s3Service.downloadFile("MVI_3146.3gp");
+
         // Execute StreamVideo AsyncTask
 
         // Create a progressbar
@@ -63,7 +63,10 @@ public class VideoFragment extends Fragment {
             MediaController mediacontroller = new MediaController(getContext());
             mediacontroller.setAnchorView(videoView);
             // Get the URL from String VideoURL
-            Uri video = Uri.parse(url.toURI().toString());
+//            Uri video = Uri.parse("https://s3.amazonaws.com/olin-mobile-proto/MVI_3140.MOV");
+//            Uri video = Uri.parse(url.toURI().toString());
+//            Uri video = Uri.fromFile(file);
+            Uri video = Uri.parse("https://s3.amazonaws.com/olin-mobile-proto/MVI_3146.mp4");
             videoView.setMediaController(mediacontroller);
             videoView.setVideoURI(video);
 
@@ -78,6 +81,7 @@ public class VideoFragment extends Fragment {
             public void onPrepared(MediaPlayer mp) {
                 pDialog.dismiss();
                 videoView.start();
+
             }
         });
 

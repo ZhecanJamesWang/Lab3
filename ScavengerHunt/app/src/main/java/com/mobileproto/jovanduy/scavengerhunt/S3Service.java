@@ -5,7 +5,9 @@ import android.util.Log;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -40,16 +42,13 @@ public class S3Service {
         TransferObserver observer = transferUtility.upload(BUCKET_NAME, key, file);
     }
 
-    public URL downloadFile(String key, File file) {
-        TransferObserver observer = transferUtility.download(BUCKET_NAME, key, file);
-        Log.d("STUFFFF", Integer.toString(observer.getId()));
+    public URL downloadFile(String key) {
+//        TransferObserver observer = transferUtility.download(BUCKET_NAME, key, file);
         GeneratePresignedUrlRequest urlRequest = new GeneratePresignedUrlRequest(BUCKET_NAME, key);
         urlRequest.setExpiration(new Date(System.currentTimeMillis() + 3600000));  // Added an hour's worth of milliseconds to the current time.
         //urlRequest.setResponseHeaders(override);
-        URL url = s3.generatePresignedUrl( urlRequest );
-
-
-
+        URL url = s3.generatePresignedUrl(urlRequest);
+        Log.d("URL:", url.toString());
 
         return url;
     }
