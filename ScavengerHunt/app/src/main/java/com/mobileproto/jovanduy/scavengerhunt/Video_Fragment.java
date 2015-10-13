@@ -35,12 +35,12 @@ public class Video_Fragment  extends Fragment {
         if (button.equals("GPS") ){
             Button GPS_button;
             GPS_button = (Button) v.findViewById(R.id.GPS_button);
+            // create class object
+            gps = new GPSTracker(getActivity());
 
             GPS_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
-                    // create class object
-                    gps = new GPSTracker(getActivity());
 
                     // check if GPS enabled
                     if(gps.canGetLocation()){
