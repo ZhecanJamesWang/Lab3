@@ -28,7 +28,8 @@ public class VideoFragment extends Fragment {
 
     public View view;
     public VideoView videoView;
-    ProgressDialog pDialog;
+    public ProgressDialog pDialog;
+    public HuntProgress huntProgress;
 
     public VideoFragment() {
     }
@@ -38,11 +39,8 @@ public class VideoFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_video, container, false);
         videoView = (VideoView) view.findViewById(R.id.video_view);
-//        File file = new File(getContext().getFilesDir(), "vid1");
-//        Uri video = Uri.fromFile(file);
-//        new S3Download(getContext()).execute(video);
+        huntProgress = new HuntProgress();
         S3Service s3Service = new S3Service(getContext());
-//        File file = new File(getContext().getFilesDir(), "vid1");
 //        URL url = s3Service.downloadFile("MVI_3146.3gp");
 
         // Execute StreamVideo AsyncTask
@@ -50,7 +48,7 @@ public class VideoFragment extends Fragment {
         // Create a progressbar
         pDialog = new ProgressDialog(getContext());
         // Set progressbar title
-        pDialog.setTitle("Android Video Streaming Tutorial");
+        pDialog.setTitle("Stage " + huntProgress.getStage() + " video");
         // Set progressbar message
         pDialog.setMessage("Buffering...");
         pDialog.setIndeterminate(false);
@@ -60,14 +58,12 @@ public class VideoFragment extends Fragment {
 
         try {
             // Start the MediaController
-            MediaController mediacontroller = new MediaController(getContext());
-            mediacontroller.setAnchorView(videoView);
+            MediaController mediaController = new MediaController(getContext());
+//            mediaController.setAnchorView(videoView);
             // Get the URL from String VideoURL
-//            Uri video = Uri.parse("https://s3.amazonaws.com/olin-mobile-proto/MVI_3140.MOV");
 //            Uri video = Uri.parse(url.toURI().toString());
-//            Uri video = Uri.fromFile(file);
-            Uri video = Uri.parse("https://s3.amazonaws.com/olin-mobile-proto/MVI_3146.mp4");
-            videoView.setMediaController(mediacontroller);
+            Uri video = Uri.parse("https://s3.amazonaws.com/olin-mobile-proto/MVI_3146.3gp");
+            videoView.setMediaController(mediaController);
             videoView.setVideoURI(video);
 
         } catch (Exception e) {
