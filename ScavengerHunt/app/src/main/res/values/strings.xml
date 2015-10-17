@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">ScavengerHunt</string>
     <string name="action_settings">Settings</string>
+    <string name="GPS_Checking_Camera">Camera</string>
+    <string name="GPS_Checking_Cancel">Cancel</string>
+    <string name="GPS_Checking_MSG">You find the spot!!!</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
