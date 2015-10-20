@@ -16,7 +16,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by Jordan on 10/16/15.
+ * Class to connect to server
  */
 public class Server {
 
@@ -28,6 +28,11 @@ public class Server {
         url = "http://45.55.65.113/";
     }
 
+    /**
+     * gets info (lat, long, url) for next stage in scavenger hunt
+     * @param stage the stage of which to get the info
+     * @param callback callback which is set later in order to do stuff with the info
+     */
     public void getNextInfo(final int stage, final Callback callback) {
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,

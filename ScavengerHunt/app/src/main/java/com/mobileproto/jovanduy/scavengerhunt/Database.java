@@ -6,7 +6,7 @@ import java.sql.*;
 import java.math.*;
 
 /**
- * Created by Jordan on 10/6/15.
+ * DELETE THIS - USED BEFORE SERVER WAS UP AND RUNNING!!
  */
 public class Database {
 

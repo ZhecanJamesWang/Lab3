@@ -5,7 +5,7 @@ import android.content.Context;
 import java.util.ArrayList;
 
 /**
- * Created by Jordan on 10/13/15.
+ * Class for keeping track of the stage of the scavenger hunt
  */
 public class HuntProgress {
 

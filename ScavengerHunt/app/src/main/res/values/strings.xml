@@ -5,4 +5,7 @@
     <string name="GPS_check">Check GPS</string>
     <string name="left">back</string>
     <string name="right">next</string>
+    <string name="stage">Stage </string>
+    <string name="video"> video</string>
+    <string name="buffering">Buffering...</string>
 </resources>

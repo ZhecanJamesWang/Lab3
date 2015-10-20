@@ -25,7 +25,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 /**
- * Created by Jordan on 10/6/15.
+ * Fragment for displying the video view
  */
 public class VideoFragment extends Fragment {
 
@@ -75,17 +75,21 @@ public class VideoFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Set up buttons for clicking functionality
+     * @param button
+     */
     public void setUpButton(final Button button) {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (button == leftButton) {
                     currStage -= 1;
-                    loadNext(currStage);
+                    updateView(currStage);
                 }
                 else if (button == rightButton) {
                     currStage += 1;
-                    loadNext(currStage);
+                    updateView(currStage);
                 } else {
                     stageFinal += 1;
                     currStage += 1;
@@ -99,10 +103,10 @@ public class VideoFragment extends Fragment {
         });
     }
 
-    public void getNext() {
-        //TODO: update
-    }
-
+    /**
+     * Load the info for the next stage and then update the view based on that new stage
+     * @param stage stage in scavenger hunt from which to get info
+     */
     public void loadNext (final int stage) {
         server.getNextInfo(stage, new Callback() {
             @Override
@@ -117,6 +121,10 @@ public class VideoFragment extends Fragment {
         });
     }
 
+    /**
+     * update the video view to show the correct video and (un)enable left/right buttons if needed
+     * @param stage stage from which to use in the video view
+     */
     public void updateView(int stage) {
         video = Uri.parse(urlBase + videos.get(stage));
         if (currStage == stageFinal) {
@@ -133,6 +141,8 @@ public class VideoFragment extends Fragment {
         pDialog = new ProgressDialog(getContext());
         pDialog.setTitle("Stage " + currStage + " video");
         pDialog.setMessage("Buffering...");
+//        pDialog.setTitle(R.string.stage + currStage + R.string.video); //HELP! Error with strings???
+//        pDialog.setMessage(R.string.buffering);
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
         pDialog.show();
