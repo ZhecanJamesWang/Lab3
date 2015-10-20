@@ -2,4 +2,7 @@
     <string name="app_name">ScavengerHunt</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="GPS_check">Check GPS</string>
+    <string name="left">back</string>
+    <string name="right">next</string>
 </resources>

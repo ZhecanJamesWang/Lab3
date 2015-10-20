@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -26,12 +28,21 @@ import java.net.URL;
  */
 public class VideoFragment extends Fragment {
 
-    public View view;
-    public VideoView videoView;
-    public ProgressDialog pDialog;
-    public HuntProgress huntProgress;
+    private View view;
+    private VideoView videoView;
+    private ProgressDialog pDialog;
+    private Button leftButton;
+    private Button rightButton;
+    private Button checkGps;
+
+    private int currStage;
+    private Uri video;
+    private double latitude;
+    private double longitude;
+    private HuntProgress huntProgress;
 
     public VideoFragment() {
+        this.currStage = 0;
     }
 
     @Override
@@ -39,38 +50,62 @@ public class VideoFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_video, container, false);
         videoView = (VideoView) view.findViewById(R.id.video_view);
-        huntProgress = new HuntProgress();
-        S3Service s3Service = new S3Service(getContext());
-//        URL url = s3Service.downloadFile("MVI_3146.3gp");
+        leftButton = (Button) view.findViewById(R.id.left_btn);
+        rightButton = (Button) view.findViewById(R.id.right_btn);
+        checkGps = (Button) view.findViewById(R.id.gps_check_btn);
+        huntProgress = new HuntProgress(getContext());
+        setUpButton(leftButton);
+        setUpButton(rightButton);
 
-        // Execute StreamVideo AsyncTask
+        updateView(currStage);
 
-        // Create a progressbar
+        return view;
+    }
+
+    public void setUpButton(final Button button) {
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (button == leftButton) {
+                    currStage -= 1;
+                    updateView(currStage);
+                }
+                else if (button == rightButton) {
+                    currStage += 1;
+                    updateView(currStage);
+                }
+            }
+        });
+    }
+
+    public void getNext() {
+        //TODO: update
+    }
+
+    public void updateView (int stage) {
+        video = Uri.parse(huntProgress.getUrl(stage));
+        latitude = huntProgress.getLatitude(stage);
+        longitude = huntProgress.getLongitude(stage);
+        if (currStage == huntProgress.getStage()) {
+            rightButton.setEnabled(false);
+        } else {
+            rightButton.setEnabled(true);
+        }
+        if (currStage == 0) {
+            leftButton.setEnabled(false);
+        } else {
+            leftButton.setEnabled(true);
+        }
+
         pDialog = new ProgressDialog(getContext());
-        // Set progressbar title
         pDialog.setTitle("Stage " + huntProgress.getStage() + " video");
-        // Set progressbar message
         pDialog.setMessage("Buffering...");
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
-        // Show progressbar
         pDialog.show();
-
-        try {
-            // Start the MediaController
-            MediaController mediaController = new MediaController(getContext());
-//            mediaController.setAnchorView(videoView);
-            // Get the URL from String VideoURL
-//            Uri video = Uri.parse(url.toURI().toString());
-            Uri video = Uri.parse("https://s3.amazonaws.com/olin-mobile-proto/MVI_3146.3gp");
-            videoView.setMediaController(mediaController);
-            videoView.setVideoURI(video);
-
-        } catch (Exception e) {
-            Log.e("Error", e.getMessage());
-            e.printStackTrace();
-        }
-
+        MediaController mediaController = new MediaController(getContext());
+        videoView.setMediaController(mediaController);
+        videoView.setVideoURI(video);
         videoView.requestFocus();
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             // Close the progress bar and play the video
@@ -80,8 +115,5 @@ public class VideoFragment extends Fragment {
 
             }
         });
-
-
-        return view;
     }
 }
