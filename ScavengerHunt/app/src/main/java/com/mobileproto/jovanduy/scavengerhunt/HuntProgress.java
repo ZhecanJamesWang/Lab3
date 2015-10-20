@@ -23,17 +23,17 @@ public class HuntProgress {
         pathGotten = false;
     }
 
-    public void getPath() {
-        server.getInfo(new Callback() {
-            @Override
-            public void callback(boolean success, ArrayList lats, ArrayList longs, ArrayList vids) {
-                latitudes = lats;
-                longitudes = longs;
-                videos = vids;
-                pathGotten = true;
-            }
-        });
-    }
+//    public void getPath() {
+//        server.getInfo(new Callback() {
+//            @Override
+//            public void callback(boolean success, ArrayList lats, ArrayList longs, ArrayList vids) {
+//                latitudes = lats;
+//                longitudes = longs;
+//                videos = vids;
+//                pathGotten = true;
+//            }
+//        });
+//    }
 
     public boolean foundPath() {
         return pathGotten;

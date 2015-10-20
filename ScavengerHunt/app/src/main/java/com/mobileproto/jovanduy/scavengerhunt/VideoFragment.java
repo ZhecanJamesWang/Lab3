@@ -22,6 +22,7 @@ import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by Jordan on 10/6/15.
@@ -36,12 +37,20 @@ public class VideoFragment extends Fragment {
     private Button checkGps;
 
     private int currStage;
+    private int stageFinal;
+    private Server server;
+    private ArrayList<Double> latitudes;
+    private ArrayList<Double> longitudes;
+    private ArrayList<String> videos;
+    private ArrayList<String> images;
+    private String urlBase = "https://s3.amazonaws.com/olin-mobile-proto/";
+    private boolean onLastStage;
+
     private Uri video;
-    private double latitude;
-    private double longitude;
-    private HuntProgress huntProgress;
+
 
     public VideoFragment() {
+        this.stageFinal = 0;
         this.currStage = 0;
     }
 
@@ -53,11 +62,15 @@ public class VideoFragment extends Fragment {
         leftButton = (Button) view.findViewById(R.id.left_btn);
         rightButton = (Button) view.findViewById(R.id.right_btn);
         checkGps = (Button) view.findViewById(R.id.gps_check_btn);
-        huntProgress = new HuntProgress(getContext());
+        server = new Server(getContext());
+        latitudes = new ArrayList<>();
+        longitudes = new ArrayList<>();
+        videos = new ArrayList<>();
         setUpButton(leftButton);
         setUpButton(rightButton);
+        setUpButton(checkGps);
 
-        updateView(currStage);
+        loadNext(currStage);
 
         return view;
     }
@@ -68,11 +81,19 @@ public class VideoFragment extends Fragment {
             public void onClick(View v) {
                 if (button == leftButton) {
                     currStage -= 1;
-                    updateView(currStage);
+                    loadNext(currStage);
                 }
                 else if (button == rightButton) {
                     currStage += 1;
-                    updateView(currStage);
+                    loadNext(currStage);
+                } else {
+                    stageFinal += 1;
+                    currStage += 1;
+                    if(!onLastStage) {
+                        loadNext(stageFinal);
+                    } else {
+                        Log.d("YOU'RE DONE!!", "YOU'RE DONE!!");
+                    }
                 }
             }
         });
@@ -82,11 +103,23 @@ public class VideoFragment extends Fragment {
         //TODO: update
     }
 
-    public void updateView (int stage) {
-        video = Uri.parse(huntProgress.getUrl(stage));
-        latitude = huntProgress.getLatitude(stage);
-        longitude = huntProgress.getLongitude(stage);
-        if (currStage == huntProgress.getStage()) {
+    public void loadNext (final int stage) {
+        server.getNextInfo(stage, new Callback() {
+            @Override
+            public void callback(boolean success, double lat, double longi, String vid, boolean isLast) {
+                latitudes.add(stage, lat);
+                longitudes.add(stage, longi);
+                videos.add(stage, vid);
+                onLastStage = isLast;
+                updateView(stage);
+
+            }
+        });
+    }
+
+    public void updateView(int stage) {
+        video = Uri.parse(urlBase + videos.get(stage));
+        if (currStage == stageFinal) {
             rightButton.setEnabled(false);
         } else {
             rightButton.setEnabled(true);
@@ -98,7 +131,7 @@ public class VideoFragment extends Fragment {
         }
 
         pDialog = new ProgressDialog(getContext());
-        pDialog.setTitle("Stage " + huntProgress.getStage() + " video");
+        pDialog.setTitle("Stage " + currStage + " video");
         pDialog.setMessage("Buffering...");
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);

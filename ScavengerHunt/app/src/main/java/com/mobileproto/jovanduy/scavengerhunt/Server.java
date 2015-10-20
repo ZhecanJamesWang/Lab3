@@ -28,38 +28,39 @@ public class Server {
         url = "http://45.55.65.113/";
     }
 
-    public void getInfo(final Callback callback) {
+    public void getNextInfo(final int stage, final Callback callback) {
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
-                url,
+                url+"scavengerhunt",
                 new JSONObject(),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        ArrayList<Double> latitudes = new ArrayList<>();
-                        ArrayList<Double> longitudes = new ArrayList<>();
-                        ArrayList<String> videos = new ArrayList<>();
+                        double latitude = 0;
+                        double longitude = 0;
+                        String video = "";
+                        boolean isLast = false;
                         try {
                             JSONArray path = response.getJSONArray("path");
-                            for (int i=0; i<path.length(); i++) {
-                                JSONObject stage = (JSONObject) path.get(i);
-                                latitudes.add(stage.getDouble("latitude"));
-                                longitudes.add(stage.getDouble("longitude"));
-                                videos.add(stage.getString("s3id"));
-
+                            if (path.length() == stage + 1) {
+                                isLast = true;
                             }
+                            JSONObject stageInfo = (JSONObject) path.get(stage);
+                            latitude = stageInfo.getDouble("latitude");
+                            longitude = stageInfo.getDouble("longitude");
+                            video = stageInfo.getString("s3id");
                         } catch (Exception e) {
-                            callback.callback(false, null, null, null);
+                            callback.callback(false, 0, 0, null, false);
                             Log.e("Error!", e.getMessage());
                         }
-                        callback.callback(true, latitudes, longitudes, videos);
+                        callback.callback(true, latitude, longitude, video, isLast);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("Error!", error.getMessage());
-                        callback.callback(false, null, null, null);
+                        Log.e("Error!", error.getMessage()+ " no internet...");
+                        callback.callback(false, 0, 0, null, false);
                     }
                 }
         );
