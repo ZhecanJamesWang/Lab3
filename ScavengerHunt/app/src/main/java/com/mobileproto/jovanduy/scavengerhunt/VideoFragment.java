@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.MediaController;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
@@ -35,6 +36,7 @@ public class VideoFragment extends Fragment {
     private Button leftButton;
     private Button rightButton;
     private Button checkGps;
+    private TextView textView;
 
     private int currStage;
     private int stageFinal;
@@ -62,6 +64,7 @@ public class VideoFragment extends Fragment {
         leftButton = (Button) view.findViewById(R.id.left_btn);
         rightButton = (Button) view.findViewById(R.id.right_btn);
         checkGps = (Button) view.findViewById(R.id.gps_check_btn);
+        textView = (TextView) view.findViewById(R.id.text);
         server = new Server(getContext());
         latitudes = new ArrayList<>();
         longitudes = new ArrayList<>();
@@ -91,12 +94,14 @@ public class VideoFragment extends Fragment {
                     currStage += 1;
                     updateView(currStage);
                 } else {
-                    stageFinal += 1;
-                    currStage += 1;
-                    if(!onLastStage) {
-                        loadNext(stageFinal);
-                    } else {
-                        Log.d("YOU'RE DONE!!", "YOU'RE DONE!!");
+                    if (currStage == stageFinal) {
+                        if(!onLastStage) {
+                            stageFinal += 1;
+                            currStage += 1;
+                            loadNext(stageFinal);
+                        } else {
+                            Log.d("YOU'RE DONE!!", "YOU'RE DONE!!");
+                        }
                     }
                 }
             }
@@ -127,12 +132,14 @@ public class VideoFragment extends Fragment {
      */
     public void updateView(int stage) {
         video = Uri.parse(urlBase + videos.get(stage));
-        if (currStage == stageFinal) {
+        if (stage == stageFinal) {
             rightButton.setEnabled(false);
+            textView.setText("Stage " + stage + ", current stage");
         } else {
             rightButton.setEnabled(true);
+            textView.setText("Stage " + stage + ", previous stage");
         }
-        if (currStage == 0) {
+        if (stage == 0) {
             leftButton.setEnabled(false);
         } else {
             leftButton.setEnabled(true);
