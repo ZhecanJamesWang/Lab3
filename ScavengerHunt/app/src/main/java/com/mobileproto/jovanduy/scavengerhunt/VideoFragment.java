@@ -82,7 +82,7 @@ public class VideoFragment extends Fragment {
      * Set up buttons for clicking functionality
      * @param button
      */
-    public void setUpButton(final Button button) {
+    public void setUpButton(final Button button) { //TODO: separate into three different methods
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,7 +134,7 @@ public class VideoFragment extends Fragment {
         video = Uri.parse(urlBase + videos.get(stage));
         if (stage == stageFinal) {
             rightButton.setEnabled(false);
-            textView.setText("Stage " + stage + ", current stage");
+            textView.setText(R.string.stage + stage + ", current stage"); // Shows up as int???
         } else {
             rightButton.setEnabled(true);
             textView.setText("Stage " + stage + ", previous stage");
@@ -147,7 +147,7 @@ public class VideoFragment extends Fragment {
 
         pDialog = new ProgressDialog(getContext());
         pDialog.setTitle("Stage " + currStage + " video");
-        pDialog.setMessage("Buffering...");
+        pDialog.setMessage("Buffering..."); //TODO getActivity.getString....
 //        pDialog.setTitle(R.string.stage + currStage + R.string.video); //HELP! Error with strings???
 //        pDialog.setMessage(R.string.buffering);
         pDialog.setIndeterminate(false);
