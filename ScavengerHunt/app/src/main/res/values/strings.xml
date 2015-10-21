@@ -5,9 +5,15 @@
     <string name="GPS_Checking_Cancel">Cancel</string>
     <string name="GPS_Checking_Retry">Camera</string>
     <string name="GPS_Checking_Return">Cancel</string>
-
+    <string name="GPS_Checking_Hint">Hint</string>
     <string name="GPS_Checking_Fail_MSG">You are not there yet :(</string>
     <string name="GPS_Checking_Success_MSG">You find the spot!!!</string>
+    <string name="GPS_check">Check GPS</string>
+    <string name="left">back</string>
+    <string name="right">next</string>
+    <string name="stage">Stage </string>
+    <string name="video"> video</string>
+    <string name="buffering">Buffering...</string>
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

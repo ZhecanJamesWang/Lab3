@@ -27,9 +27,37 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import android.app.ProgressDialog;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.MediaController;
+import android.widget.TextView;
+import android.widget.VideoView;
 
-public class Video_Fragment  extends Fragment {
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 
+import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
+
+
+
+
+public class VideoFragment extends Fragment {
+
+    private Boolean GPS_testing = true;
     // GPSTracker class
     GPSTracker gps;
     private String TAG = "VIDEO FRAGMENT";
@@ -37,28 +65,136 @@ public class Video_Fragment  extends Fragment {
     static final int REQUEST_TAKE_PHOTO = 1;
     private double  target_latitude = 123;
     private double  target_longitude = 123;
-    private Boolean GPS_testing = true;
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    private View view;
+    private VideoView videoView;
+    private ProgressDialog pDialog;
+    private Button leftButton;
+    private Button rightButton;
+    private Button checkGps;
+    private TextView textView;
 
+    private int currStage;
+    private int stageFinal;
+    private Server server;
+    private ArrayList<Double> latitudes;
+    private ArrayList<Double> longitudes;
+    private ArrayList<String> videos;
+    private ArrayList<String> images;
+    private String urlBase = "https://s3.amazonaws.com/olin-mobile-proto/";
+    private boolean onLastStage;
+
+    private Uri video;
+
+    public VideoFragment() {
+        this.stageFinal = 0;
+        this.currStage = 0;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootview = inflater.inflate(R.layout.fragment_video_, container, false);
-        create_button(rootview, "GPS");
-        create_button(rootview, "back_menu_button");
-    return rootview;
+        view = inflater.inflate(R.layout.fragment_video, container, false);
+        videoView = (VideoView) view.findViewById(R.id.video_view);
+        leftButton = (Button) view.findViewById(R.id.left_btn);
+        rightButton = (Button) view.findViewById(R.id.right_btn);
+        checkGps = (Button) view.findViewById(R.id.gps_check_btn);
+        textView = (TextView) view.findViewById(R.id.text);
+        server = new Server(getContext());
+        latitudes = new ArrayList<>();
+        longitudes = new ArrayList<>();
+        videos = new ArrayList<>();
+        createGPSButton(view);
+        createMenuButton(view);
+
+        leftButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currStage -= 1;
+                updateView(currStage);
+            }
+        });
+
+        rightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currStage += 1;
+                updateView(currStage);
+            }
+        });
+
+        loadNext(currStage);
+    return view;
+    }
+
+    /**
+     * Load the info for the next stage and then update the view based on that new stage
+     * @param stage stage in scavenger hunt from which to get info
+     */
+    public void loadNext (final int stage) {
+        server.getNextInfo(stage, new Callback() {
+            @Override
+            public void callback(boolean success, double lat, double longi, String vid, boolean isLast) {
+                latitudes.add(stage, lat);
+                longitudes.add(stage, longi);
+                videos.add(stage, vid);
+                onLastStage = isLast;
+                updateView(stage);
+
+            }
+        });
+    }
+    /**
+     * update the video view to show the correct video and (un)enable left/right buttons if needed
+     * @param stage stage from which to use in the video view
+     */
+    public void updateView(int stage) {
+        video = Uri.parse(urlBase + videos.get(stage));
+        if (stage == stageFinal) {
+            rightButton.setEnabled(false);
+            textView.setText(R.string.stage + stage + ", current stage"); // Shows up as int??? TODO: set up in strings.xml
+        } else {
+            rightButton.setEnabled(true);
+            textView.setText("Stage " + stage + ", previous stage");
+            checkGps.setText("View image\n& GPS");
+        }
+        if (stage == 0) {
+            leftButton.setEnabled(false);
+        } else {
+            leftButton.setEnabled(true);
+        }
+
+        pDialog = new ProgressDialog(getContext());
+//        pDialog.setTitle("Stage " + currStage + " video");
+//        pDialog.setMessage("Buffering..."); //TODO getActivity.getString....
+        pDialog.setTitle(getString(R.string.stage) + currStage + getString(R.string.video)); //HELP! Error with strings???
+        pDialog.setMessage(getString(R.string.buffering));
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        pDialog.show();
+        MediaController mediaController = new MediaController(getContext());
+        videoView.setMediaController(mediaController);
+        videoView.setVideoURI(video);
+        videoView.requestFocus();
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            // Close the progress bar and play the video
+            public void onPrepared(MediaPlayer mp) {
+                pDialog.dismiss();
+                videoView.start();
+
+            }
+        });
     }
 
     public Dialog Create_Dialog(Double latitude, Double longitude) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        if (latitude == target_latitude && longitude == target_longitude) {
+        if (latitude - target_latitude < 10 && longitude - target_longitude < 10) {
             builder.setMessage(R.string.GPS_Checking_Success_MSG)
                     .setPositiveButton(R.string.GPS_Checking_Camera, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             // FIRE ZE MISSILES!
                             Log.d(TAG, "camera");
-//                        dispatchTakePictureIntent();
+                        dispatchTakePictureIntent();
 
                         }
                     })
@@ -69,6 +205,18 @@ public class Video_Fragment  extends Fragment {
                             dialog.dismiss();
                         }
                     });
+//            if (currStage == stageFinal) {
+//                if(!onLastStage) {
+//                    stageFinal += 1;
+//                    currStage += 1;
+//                    loadNext(stageFinal);
+//                } else {
+//                    Log.d("YOU'RE DONE!!", "YOU'RE DONE!!");
+//                }
+//            } else {
+////                    server.getUploadedImage(currStage,);
+//            }
+
             return builder.create();
         } else {
             Double latitude_offset = latitude - target_latitude;
@@ -90,6 +238,12 @@ public class Video_Fragment  extends Fragment {
                             Log.d(TAG, "Return");
                             dialog.dismiss();
                         }
+                    })
+                    .setNeutralButton(R.string.GPS_Checking_Hint, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            CompassFragment compassFragment = new CompassFragment();
+                            transitionToFragment(compassFragment);
+                        }
                     });
 
             return builder.create();
@@ -97,10 +251,9 @@ public class Video_Fragment  extends Fragment {
     }
 
 
-    public void create_button(View v, String button){
-        if (button.equals("GPS") ){
-            final Button GPS_button;
-            GPS_button = (Button) v.findViewById(R.id.GPS_button);
+    public void createGPSButton(View v){
+            final Button GPS_button;//TODO: move these to the top
+            GPS_button = (Button) v.findViewById(R.id.gps_check_btn);
             // create class object
             gps = new GPSTracker(getActivity());
 
@@ -116,6 +269,10 @@ public class Video_Fragment  extends Fragment {
                         if (GPS_testing) {
                             target_latitude = latitude;
                             target_longitude = longitude;
+                        }
+                        else{
+                            target_latitude = 12344444;
+                            target_longitude = 12344444;
                         }
 
 
@@ -133,7 +290,8 @@ public class Video_Fragment  extends Fragment {
                 }
             });
         }
-        else if (button.equals("back_menu_button")) {
+
+    public void createMenuButton(View v){
             Log.d(TAG, "back_menu_button");
             Button back_menu_button;
             Log.d(TAG,"0");
@@ -152,14 +310,12 @@ public class Video_Fragment  extends Fragment {
                 }
             });
         }
-    }
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
-            Log.d(TAG, "getphotofailing ");
         }
 
 

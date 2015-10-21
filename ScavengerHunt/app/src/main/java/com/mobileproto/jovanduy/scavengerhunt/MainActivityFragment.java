@@ -14,10 +14,8 @@ import android.widget.Toast;
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
-
+    private VideoFragment videoFragment;
     private String TAG = "main_activity_fragment";
-    public MainActivityFragment() {
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,9 +29,12 @@ public class MainActivityFragment extends Fragment {
     }
 
     public void transitionToFragment(Fragment fragment) {
-        android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
+        android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();//TODO: change the import
         android.support.v4.app.FragmentTransaction transaction = fm.beginTransaction();
         transaction.replace(R.id.container, fragment);
+        if (fragment == videoFragment) {
+            transaction.addToBackStack(videoFragment.toString());
+        }
         transaction.commit();
     }
 
@@ -47,8 +48,8 @@ public class MainActivityFragment extends Fragment {
             start_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Video_Fragment video_fragment = new Video_Fragment();
-                    transitionToFragment(video_fragment);
+                    VideoFragment videoFragment = new VideoFragment();
+                    transitionToFragment(videoFragment);
                 }
             });
         }
@@ -56,7 +57,6 @@ public class MainActivityFragment extends Fragment {
             Log.d(TAG, "guide_button");
             Button guide_button;
             guide_button = (Button) v.findViewById(R.id.guide_button);
-
             guide_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

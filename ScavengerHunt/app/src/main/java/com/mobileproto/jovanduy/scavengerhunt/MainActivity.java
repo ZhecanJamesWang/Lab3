@@ -8,6 +8,8 @@
 
 public class MainActivity extends AppCompatActivity {
 
+    public VideoFragment videoFragment = new VideoFragment();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
