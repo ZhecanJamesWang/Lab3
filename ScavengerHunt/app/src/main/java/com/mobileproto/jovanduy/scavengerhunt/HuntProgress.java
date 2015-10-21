@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Class for keeping track of the stage of the scavenger hunt
  */
-public class HuntProgress {
+public class HuntProgress { //TODO: actually use this class! Good for MVC
 
     private int stage = 0;
     private Server server;

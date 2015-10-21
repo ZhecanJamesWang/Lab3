@@ -22,10 +22,12 @@ public class Server {
 
     private RequestQueue queue;
     private String url;
+    private String appID;
 
     public Server(Context context) {
         queue = Volley.newRequestQueue(context);
         url = "http://45.55.65.113/";
+        appID = "JamesJordanPhotos";
     }
 
     /**
@@ -66,6 +68,72 @@ public class Server {
                     public void onErrorResponse(VolleyError error) {
                         Log.e("Error!", error.getMessage()+ " no internet...");
                         callback.callback(false, 0, 0, null, false);
+                    }
+                }
+        );
+        queue.add(request);
+    }
+
+    public void getUploadedImage(int stage, final GetImageCallback callback) {
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.GET,
+                url + "userdata/" + appID,
+                new JSONObject(),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        String key = "";
+                        try {
+                            JSONArray data = response.getJSONArray("data");
+                            
+                        } catch (Exception e) {
+                            callback.callback(false, null);
+                            Log.e("ERROR!", e.getMessage());
+                        }
+                        callback.callback(true, key);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("Error!", error.getMessage());
+                        callback.callback(false, null);
+                    }
+                }
+        );
+        queue.add(request);
+    }
+
+    public void postImage(String imageKey, int location, final PutCallback callback) {
+        JSONObject body = new JSONObject();
+        try {
+            body.put("imageKey", imageKey);
+            body.put("imageLocation", location);
+        } catch (Exception e) {
+            Log.e("JSONException", e.getMessage());
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.PUT,
+                url + "userdata/" + appID,
+                body,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        String statusCode = "";
+                        try {
+                            statusCode = response.toString();
+                        } catch (Exception e) {
+                            callback.callbackPut(false, null);
+                        }
+                        callback.callbackPut(true, statusCode);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("Error!", error.getMessage());
+                        callback.callbackPut(false, null);
                     }
                 }
         );

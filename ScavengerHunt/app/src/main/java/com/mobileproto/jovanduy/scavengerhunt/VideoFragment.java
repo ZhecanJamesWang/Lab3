@@ -69,43 +69,43 @@ public class VideoFragment extends Fragment {
         latitudes = new ArrayList<>();
         longitudes = new ArrayList<>();
         videos = new ArrayList<>();
-        setUpButton(leftButton);
-        setUpButton(rightButton);
-        setUpButton(checkGps);
+
+        leftButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currStage -= 1;
+                updateView(currStage);
+            }
+        });
+
+        rightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currStage += 1;
+                updateView(currStage);
+            }
+        });
+
+        checkGps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currStage == stageFinal) {
+                    if(!onLastStage) {
+                        stageFinal += 1;
+                        currStage += 1;
+                        loadNext(stageFinal);
+                    } else {
+                        Log.d("YOU'RE DONE!!", "YOU'RE DONE!!");
+                    }
+                } else {
+//                    server.getUploadedImage(currStage,);
+                }
+            }
+        });
 
         loadNext(currStage);
 
         return view;
-    }
-
-    /**
-     * Set up buttons for clicking functionality
-     * @param button
-     */
-    public void setUpButton(final Button button) { //TODO: separate into three different methods
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (button == leftButton) {
-                    currStage -= 1;
-                    updateView(currStage);
-                }
-                else if (button == rightButton) {
-                    currStage += 1;
-                    updateView(currStage);
-                } else {
-                    if (currStage == stageFinal) {
-                        if(!onLastStage) {
-                            stageFinal += 1;
-                            currStage += 1;
-                            loadNext(stageFinal);
-                        } else {
-                            Log.d("YOU'RE DONE!!", "YOU'RE DONE!!");
-                        }
-                    }
-                }
-            }
-        });
     }
 
     /**
@@ -134,10 +134,11 @@ public class VideoFragment extends Fragment {
         video = Uri.parse(urlBase + videos.get(stage));
         if (stage == stageFinal) {
             rightButton.setEnabled(false);
-            textView.setText(R.string.stage + stage + ", current stage"); // Shows up as int???
+            textView.setText(R.string.stage + stage + ", current stage"); // Shows up as int??? TODO: set up in strings.xml
         } else {
             rightButton.setEnabled(true);
             textView.setText("Stage " + stage + ", previous stage");
+            checkGps.setText("View image\n& GPS");
         }
         if (stage == 0) {
             leftButton.setEnabled(false);
@@ -146,10 +147,10 @@ public class VideoFragment extends Fragment {
         }
 
         pDialog = new ProgressDialog(getContext());
-        pDialog.setTitle("Stage " + currStage + " video");
-        pDialog.setMessage("Buffering..."); //TODO getActivity.getString....
-//        pDialog.setTitle(R.string.stage + currStage + R.string.video); //HELP! Error with strings???
-//        pDialog.setMessage(R.string.buffering);
+//        pDialog.setTitle("Stage " + currStage + " video");
+//        pDialog.setMessage("Buffering..."); //TODO getActivity.getString....
+        pDialog.setTitle(getString(R.string.stage) + currStage + getString(R.string.video)); //HELP! Error with strings???
+        pDialog.setMessage(getString(R.string.buffering));
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
         pDialog.show();
