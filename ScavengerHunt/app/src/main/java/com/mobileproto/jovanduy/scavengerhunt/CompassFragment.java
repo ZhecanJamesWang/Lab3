@@ -26,7 +26,12 @@ public class CompassFragment extends Fragment implements SensorEventListener{
 
     // device sensor manager
     private SensorManager mSensorManager;
-
+    private String longitude;
+    private String latitude;
+    private String targetLongitude;
+    private String targetLatitude;
+    private double distance;
+    private double[] locationInfo;
     TextView tvHeading;
 
     public CompassFragment() {
@@ -45,6 +50,14 @@ public class CompassFragment extends Fragment implements SensorEventListener{
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_compass, container, false);
         createImageview(rootView);
+        Bundle bundle = this.getArguments();
+        longitude = bundle.getString("longitude", null);
+        latitude = bundle.getString("longitude", null);
+        targetLongitude = bundle.getString("target_longitude", null);
+        targetLatitude = bundle.getString("target_latitude", null);
+
+        locationInfo = calculateDistance(latitude, longitude, targetLatitude, targetLongitude);
+
         return rootView;
     }
     public void createImageview(View v){
@@ -101,6 +114,40 @@ public class CompassFragment extends Fragment implements SensorEventListener{
         image.startAnimation(ra);
         currentDegree = -degree;
 
+    }
+    public double[] calculateDistance(String slat1, String slon1, String slat2, String slon2){
+        double lat1 = Double.parseDouble(slat1);
+        double lon1 = Double.parseDouble(slon1);
+        double lat2 = Double.parseDouble(slat2);
+        double lon2 = Double.parseDouble(slon2);
+        String direction;
+        Double latitude_offset = lat1 - lat2;
+        Double longitude_offset = lon1 - lon2;
+        if (longitude_offset < 0){
+            if (longitude_offset < 0){
+                direction = "SE";
+            }
+            else if(longitude_offset>0){
+                direction = "SN";
+            }
+            else if(longitude_offset == 0){
+                
+            }
+        }
+
+        if (latitude_offset
+
+        Double R = 6378.137; // Radius of earth in KM
+        double dLat = (lat2 - lat1) * Math.PI / 180;
+        double dLon = (lon2 - lon1) * Math.PI / 180;
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                        Math.sin(dLon/2) * Math.sin(dLon/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        double d = R * c;
+
+
+        return new double[] {d * 1000, latitude_offset, longitude_offset}; // meters
     }
 
 }

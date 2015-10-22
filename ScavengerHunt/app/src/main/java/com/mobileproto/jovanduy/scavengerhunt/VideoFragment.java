@@ -83,8 +83,9 @@ public class VideoFragment extends Fragment {
     private ArrayList<String> images;
     private String urlBase = "https://s3.amazonaws.com/olin-mobile-proto/";
     private boolean onLastStage;
-
     private Uri video;
+
+
 
     public VideoFragment() {
         this.stageFinal = 0;
@@ -186,7 +187,7 @@ public class VideoFragment extends Fragment {
         });
     }
 
-    public Dialog Create_Dialog(Double latitude, Double longitude) {
+    public Dialog Create_Dialog(final Double latitude, final Double longitude) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         if (latitude - target_latitude < 10 && longitude - target_longitude < 10) {
             builder.setMessage(R.string.GPS_Checking_Success_MSG)
@@ -241,7 +242,14 @@ public class VideoFragment extends Fragment {
                     })
                     .setNeutralButton(R.string.GPS_Checking_Hint, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
+                            Bundle offset = new Bundle();
+                            offset.putString("latitude", latitude.toString());
+                            offset.putString("longitude", longitude.toString());
+                            offset.putString("target_latitude", String.valueOf(target_latitude));
+                            offset.putString("target_longitude", String.valueOf(target_longitude));
+
                             CompassFragment compassFragment = new CompassFragment();
+                            compassFragment.setArguments(offset);
                             transitionToFragment(compassFragment);
                         }
                     });
