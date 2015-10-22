@@ -51,7 +51,9 @@ public class Section_End extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                transitionToFragment();
+                MainActivity mainActivity = (MainActivity) getActivity();
+                mainActivity.transitionToFragment(mainActivity.videoFragment);
+//                transitionToFragment();
             }
         });
     }
