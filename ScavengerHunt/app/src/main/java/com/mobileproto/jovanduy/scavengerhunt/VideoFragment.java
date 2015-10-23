@@ -189,37 +189,37 @@ public class VideoFragment extends Fragment {
 
     public Dialog Create_Dialog(final Double latitude, final Double longitude) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        if (latitude - target_latitude < 10 && longitude - target_longitude < 10) {
-            builder.setMessage(R.string.GPS_Checking_Success_MSG)
-                    .setPositiveButton(R.string.GPS_Checking_Camera, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // FIRE ZE MISSILES!
-                            Log.d(TAG, "camera");
-                        dispatchTakePictureIntent();
-
-                        }
-                    })
-                    .setNegativeButton(R.string.GPS_Checking_Cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
-                            Log.d(TAG, "cancel");
-                            dialog.dismiss();
-                        }
-                    });
-//            if (currStage == stageFinal) {
-//                if(!onLastStage) {
-//                    stageFinal += 1;
-//                    currStage += 1;
-//                    loadNext(stageFinal);
-//                } else {
-//                    Log.d("YOU'RE DONE!!", "YOU'RE DONE!!");
-//                }
-//            } else {
-////                    server.getUploadedImage(currStage,);
-//            }
-
-            return builder.create();
-        } else {
+//        if (latitude - target_latitude < 10 && longitude - target_longitude < 10) {
+//            builder.setMessage(R.string.GPS_Checking_Success_MSG)
+//                    .setPositiveButton(R.string.GPS_Checking_Camera, new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int id) {
+//                            // FIRE ZE MISSILES!
+//                            Log.d(TAG, "camera");
+//                        dispatchTakePictureIntent();
+//
+//                        }
+//                    })
+//                    .setNegativeButton(R.string.GPS_Checking_Cancel, new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int id) {
+//                            // User cancelled the dialog
+//                            Log.d(TAG, "cancel");
+//                            dialog.dismiss();
+//                        }
+//                    });
+////            if (currStage == stageFinal) {
+////                if(!onLastStage) {
+////                    stageFinal += 1;
+////                    currStage += 1;
+////                    loadNext(stageFinal);
+////                } else {
+////                    Log.d("YOU'RE DONE!!", "YOU'RE DONE!!");
+////                }
+////            } else {
+//////                    server.getUploadedImage(currStage,);
+////            }
+//
+//            return builder.create();
+//        } else {
             Double latitude_offset = latitude - target_latitude;
             Double longitude_offset = longitude - target_longitude;
             builder.setTitle(R.string.GPS_Checking_Fail_MSG)
@@ -255,7 +255,7 @@ public class VideoFragment extends Fragment {
                     });
 
             return builder.create();
-        }
+//        }
     }
 
 

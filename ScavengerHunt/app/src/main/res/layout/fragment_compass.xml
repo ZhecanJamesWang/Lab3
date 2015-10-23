@@ -20,4 +20,23 @@
         android:src="@drawable/compass"
         android:layout_below="@+id/Heading" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/directionText"
+        android:layout_alignTop="@+id/distanceText"
+        android:layout_toLeftOf="@+id/Heading"
+        android:layout_toStartOf="@+id/Heading" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/distanceText"
+        android:layout_marginBottom="34dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/Heading"
+        android:layout_toEndOf="@+id/Heading" />
+
 </RelativeLayout>
