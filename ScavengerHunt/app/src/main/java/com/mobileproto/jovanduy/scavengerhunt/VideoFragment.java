@@ -57,14 +57,16 @@ import java.util.ArrayList;
 
 public class VideoFragment extends Fragment {
 
-    private Boolean GPS_testing = true;
     // GPSTracker class
     GPSTracker gps;
+    private Boolean gpsTestingNearby = true;
     private String TAG = "VIDEO FRAGMENT";
     private String mCurrentPhotoPath;
     static final int REQUEST_TAKE_PHOTO = 1;
-    private double  target_latitude = 123;
-    private double  target_longitude = 123;
+
+    private double  target_latitude;
+    private double  target_longitude;
+
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private View view;
     private VideoView videoView;
@@ -125,6 +127,15 @@ public class VideoFragment extends Fragment {
         });
 
         loadNext(currStage);
+
+        if (gpsTestingNearby){
+            target_latitude = 42.280929;
+            target_longitude = -71.237755;
+        }
+        else{
+            target_latitude = 39.904211;
+            target_longitude = 116.407395;
+        }
     return view;
     }
 
@@ -189,50 +200,42 @@ public class VideoFragment extends Fragment {
 
     public Dialog Create_Dialog(final Double latitude, final Double longitude) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//        if (latitude - target_latitude < 10 && longitude - target_longitude < 10) {
-//            builder.setMessage(R.string.GPS_Checking_Success_MSG)
-//                    .setPositiveButton(R.string.GPS_Checking_Camera, new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int id) {
-//                            // FIRE ZE MISSILES!
-//                            Log.d(TAG, "camera");
-//                        dispatchTakePictureIntent();
-//
-//                        }
-//                    })
-//                    .setNegativeButton(R.string.GPS_Checking_Cancel, new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int id) {
-//                            // User cancelled the dialog
-//                            Log.d(TAG, "cancel");
-//                            dialog.dismiss();
-//                        }
-//                    });
-////            if (currStage == stageFinal) {
-////                if(!onLastStage) {
-////                    stageFinal += 1;
-////                    currStage += 1;
-////                    loadNext(stageFinal);
-////                } else {
-////                    Log.d("YOU'RE DONE!!", "YOU'RE DONE!!");
-////                }
-////            } else {
-//////                    server.getUploadedImage(currStage,);
-////            }
-//
-//            return builder.create();
-//        } else {
-            Double latitude_offset = latitude - target_latitude;
-            Double longitude_offset = longitude - target_longitude;
-            builder.setTitle(R.string.GPS_Checking_Fail_MSG)
-                    .setMessage("latitude_offset:" +"\n"+ latitude_offset.toString()+"\n"+"longitude_offset:" +"\n"+ longitude_offset.toString())
-                    .setPositiveButton(R.string.GPS_Checking_Retry, new DialogInterface.OnClickListener() {
+        Double latitude_offset = latitude - target_latitude;
+        Double longitude_offset = longitude - target_longitude;
+        if (Math.abs(latitude_offset) < 10 && Math.abs(longitude_offset) < 10) {
+            builder.setMessage(R.string.GPS_Checking_Success_MSG)
+                    .setPositiveButton(R.string.GPS_Checking_Camera, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            Log.d(TAG, "Retry GPS");
-                            double latitude = gps.getLatitude();
-                            double longitude = gps.getLongitude();
-                            Create_Dialog(latitude, longitude);
+                            // FIRE ZE MISSILES!
+                            Log.d(TAG, "camera");
+                        dispatchTakePictureIntent();
 
                         }
                     })
+                    .setNegativeButton(R.string.GPS_Checking_Cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                            Log.d(TAG, "cancel");
+                            dialog.dismiss();
+                        }
+                    });
+//            if (currStage == stageFinal) {
+//                if(!onLastStage) {
+//                    stageFinal += 1;
+//                    currStage += 1;
+//                    loadNext(stageFinal);
+//                } else {
+//                    Log.d("YOU'RE DONE!!", "YOU'RE DONE!!");
+//                }
+//            } else {
+////                    server.getUploadedImage(currStage,);
+//            }
+
+            return builder.create();
+        }
+        else {
+            builder.setTitle(R.string.GPS_Checking_Fail_MSG)
+                    .setMessage("latitude_offset:" +"\n"+ latitude_offset.toString()+"\n"+"longitude_offset:" +"\n"+ longitude_offset.toString())
                     .setNegativeButton(R.string.GPS_Checking_Return, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             // User cancelled the dialog
@@ -255,7 +258,7 @@ public class VideoFragment extends Fragment {
                     });
 
             return builder.create();
-//        }
+        }
     }
 
 
@@ -274,14 +277,6 @@ public class VideoFragment extends Fragment {
 
                         double latitude = gps.getLatitude();
                         double longitude = gps.getLongitude();
-                        if (GPS_testing) {
-                            target_latitude = latitude;
-                            target_longitude = longitude;
-                        }
-                        else{
-                            target_latitude = 12344444;
-                            target_longitude = 12344444;
-                        }
 
 
                         // \n is for new line

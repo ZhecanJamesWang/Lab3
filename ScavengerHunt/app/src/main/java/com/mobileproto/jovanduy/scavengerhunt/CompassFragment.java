@@ -8,6 +8,7 @@ import android.hardware.SensorManager;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.support.v4.app.Fragment;
@@ -65,13 +66,22 @@ public class CompassFragment extends Fragment implements SensorEventListener{
         CalculateLocation calculateLocation = new CalculateLocation();
         distance = calculateLocation.calculateDistance(latitude, longitude, targetLatitude, targetLongitude);
         direction = calculateLocation.calculateDirection();
-        Log.d("direction", "!!!"+direction+"!!!!");
-        Log.d(TAG, "---------------------------------------------------------------------------------------");
-        Log.d("distance", String.valueOf(distance));
-        directionText.setText("Direction: " + direction);
-        distanceText.setText("Distance:" + String.valueOf(distance)+" m");
-
+        Log.d("direction", "!!!"+direction+"@@@@");
+        Log.d("distance", "#####"+String.valueOf(distance)+"$$$$$");
+        directionText.setText("Direction:" + "\n" + direction);
+        distanceText.setText("Distance:" + "\n"+ String.valueOf(distance)+"\n"+"meters");
+        createBackVideoButton(rootView);
         return rootView;
+    }
+    public void createBackVideoButton(View v){
+        Button button = (Button) v.findViewById(R.id.Back_Video_Button);
+        button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                VideoFragment videoFragment = new VideoFragment();
+                transitionToFragment(videoFragment);
+            }}
+        );
     }
     public void createImageview(View v){
         image = (ImageView) v.findViewById(R.id.Compass_View);
@@ -131,6 +141,13 @@ public class CompassFragment extends Fragment implements SensorEventListener{
         image.startAnimation(ra);
         currentDegree = -degree;
 
+    }
+
+    public void transitionToFragment(Fragment fragment) {
+        android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();//TODO: change the import
+        android.support.v4.app.FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.container, fragment);
+        transaction.commit();
     }
 }
 

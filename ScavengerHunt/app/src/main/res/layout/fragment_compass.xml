@@ -39,4 +39,13 @@
         android:layout_toRightOf="@+id/Heading"
         android:layout_toEndOf="@+id/Heading" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:id="@+id/Back_Video_Button"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>

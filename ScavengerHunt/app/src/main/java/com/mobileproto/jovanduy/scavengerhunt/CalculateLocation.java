@@ -1,5 +1,7 @@
 package com.mobileproto.jovanduy.scavengerhunt;
 
+import android.util.Log;
+
 /**
  * Created by root on 10/22/15.
  */
@@ -12,7 +14,7 @@ public class CalculateLocation {
     public CalculateLocation(){
 
     }
-
+    private String TAG = "CalculatLocation";
     public double calculateDistance(String slat1, String slon1, String slat2, String slon2){
         lat1 = Double.parseDouble(slat1);
         lon1 = Double.parseDouble(slon1);
@@ -31,6 +33,7 @@ public class CalculateLocation {
         double d = R * c;
 
         distance = (d * 1000);
+        Log.d(TAG, "distance:"+distance);
         return distance; // meters
     }
 
@@ -40,34 +43,35 @@ public class CalculateLocation {
         Double longitude_offset = lon1 - lon2;
         if (longitude_offset < 0){
             if (latitude_offset < 0){
-                direction = "SE";
+                direction = "NE";
             }
             else if(latitude_offset >0){
-                direction = "NE";
+                direction = "SE";
             }
             else if(latitude_offset == 0){
                 direction = "E";
             }
-            else if (longitude_offset>0){
-                if (latitude_offset < 0){
-                    direction = "SW";
-                }
-                else if(latitude_offset >0){
-                    direction = "NW";
-                }
-                else if(latitude_offset == 0){
-                    direction = "W";
-                }
-                else if (longitude_offset == 0){
-                    if (latitude_offset < 0){
-                        direction = "S";
-                    }
-                    else if(latitude_offset >0){
-                        direction = "N";
-                    }
-                }
+        }
+
+        else if (longitude_offset>0) {
+            if (latitude_offset < 0) {
+                direction = "NW";
+            } else if (latitude_offset > 0) {
+                direction = "SW";
+            } else if (latitude_offset == 0) {
+                direction = "W";
             }
         }
+        else if (longitude_offset == 0){
+            if (latitude_offset < 0){
+                direction = "N";
+                }
+            else if(latitude_offset >0){
+                direction = "S";
+            }
+        }
+
+
         return direction;
     }
 }
