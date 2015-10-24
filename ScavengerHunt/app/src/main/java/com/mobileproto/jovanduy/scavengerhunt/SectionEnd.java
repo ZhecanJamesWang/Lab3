@@ -50,7 +50,11 @@ public class SectionEnd extends Fragment {
             @Override
             public void onClick(View v) {
                 MainActivity mainActivity = (MainActivity) getActivity();
+                HuntProgress huntProgress = mainActivity.videoFragment.getHuntProgress();
+                huntProgress.updateStageFinal(1);
+                huntProgress.updateCurrStage(1);
                 mainActivity.transitionToFragment(mainActivity.videoFragment);
+
 //                transitionToFragment();
             }
         });

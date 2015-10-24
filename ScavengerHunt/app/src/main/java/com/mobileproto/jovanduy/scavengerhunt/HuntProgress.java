@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Class for keeping track of the stage of the scavenger hunt
  */
-public class HuntProgress { //TODO: actually use this class! Good for MVC
+public class HuntProgress {
 
     private int currStage;
     private int stageFinal;

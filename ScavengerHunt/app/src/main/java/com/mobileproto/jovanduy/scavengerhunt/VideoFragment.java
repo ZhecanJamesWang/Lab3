@@ -89,14 +89,14 @@ public class VideoFragment extends Fragment {
         createGPSButton(view);
         createMenuButton(view);
 
-        if (gpsTestingNearby){
-            target_latitude = 42.280929;
-            target_longitude = -71.237755;
-        }
-        else{
-            target_latitude = 39.904211;
-            target_longitude = 116.407395;
-        }
+//        if (gpsTestingNearby){
+//            target_latitude = 42.280929;
+//            target_longitude = -71.237755;
+//        }
+//        else{
+//            target_latitude = 39.904211;
+//            target_longitude = 116.407395;
+//        }
 
         leftButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,6 +121,9 @@ public class VideoFragment extends Fragment {
     return view;
     }
 
+    public HuntProgress getHuntProgress() {
+        return huntProgress;
+    }
     /**
      * Load the info for the next stage and then update the view based on that new stage
      * @param stage stage in scavenger hunt from which to get info
@@ -149,14 +152,15 @@ public class VideoFragment extends Fragment {
      */
     public void updateView(int stage) {
 //        video = Uri.parse(urlBase + videos.get(stage));
+        target_latitude = huntProgress.getLatitude(huntProgress.getCurrStage());
+        target_longitude = huntProgress.getLongitude(huntProgress.getCurrStage());
         video = Uri.parse(huntProgress.getUrl(stage));
-        Log.d("VIDEO", video.toString());
         if (stage == huntProgress.getStageFinal()) {
             rightButton.setEnabled(false);
-            textView.setText(R.string.stage + stage + ", current stage"); // Shows up as int??? TODO: set up in strings.xml
+            textView.setText(getString(R.string.stage) + stage + ", current stage"); // Shows up as int??? TODO: set up in strings.xml
         } else {
             rightButton.setEnabled(true);
-            textView.setText("Stage " + stage + ", previous stage");
+            textView.setText(getString(R.string.stage) + stage + ", previous stage");
             checkGps.setText("View image\n& GPS");
         }
         if (stage == 0) {
@@ -168,7 +172,7 @@ public class VideoFragment extends Fragment {
         pDialog = new ProgressDialog(getContext());
 //        pDialog.setTitle("Stage " + currStage + " video");
 //        pDialog.setMessage("Buffering..."); //TODO getActivity.getString....
-        pDialog.setTitle(getString(R.string.stage) + currStage + getString(R.string.video)); //HELP! Error with strings???
+        pDialog.setTitle(getString(R.string.stage) + stage + getString(R.string.video)); //HELP! Error with strings???
         pDialog.setMessage(getString(R.string.buffering));
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
@@ -189,8 +193,10 @@ public class VideoFragment extends Fragment {
 
     public Dialog createDialog(final Double latitude, final Double longitude) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        Double latitude_offset = latitude - target_latitude;
-        Double longitude_offset = longitude - target_longitude;
+//        Double latitude_offset = latitude - target_latitude;
+//        Double longitude_offset = longitude - target_longitude;
+        Double latitude_offset = 9.0;
+        Double longitude_offset = 9.0;
         if (Math.abs(latitude_offset) < 10 && Math.abs(longitude_offset) < 10) {
             builder.setMessage(R.string.GPS_Checking_Success_MSG)
                     .setPositiveButton(R.string.GPS_Checking_Camera, new DialogInterface.OnClickListener() {
