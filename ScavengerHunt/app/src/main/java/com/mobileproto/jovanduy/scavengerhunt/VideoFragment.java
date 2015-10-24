@@ -140,7 +140,7 @@ public class VideoFragment extends Fragment {
 //                updateView(currStage);
             }
         });
-
+        loadNext(huntProgress.getCurrStage());
     return view;
     }
 
