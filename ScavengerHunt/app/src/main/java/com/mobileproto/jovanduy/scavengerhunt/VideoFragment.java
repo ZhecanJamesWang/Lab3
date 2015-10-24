@@ -8,10 +8,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -19,37 +17,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 import android.support.v4.app.Fragment;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import android.app.ProgressDialog;
 import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
-import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
-import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
-
-import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -92,8 +68,9 @@ public class VideoFragment extends Fragment {
     public VideoFragment() {
         this.stageFinal = 0;
         this.currStage = 0;
-        MainActivity mainActivity = (MainActivity) getActivity();
-        huntProgress = mainActivity.huntProgress;
+//        MainActivity mainActivity = (MainActivity) getActivity();
+//        huntProgress = mainActivity.huntProgress;
+        this.huntProgress = new HuntProgress();
     }
 
     @Override
@@ -172,7 +149,8 @@ public class VideoFragment extends Fragment {
      */
     public void updateView(int stage) {
 //        video = Uri.parse(urlBase + videos.get(stage));
-        video = Uri.parse(urlBase + huntProgress.getUrl(stage));
+        video = Uri.parse(huntProgress.getUrl(stage));
+        Log.d("VIDEO", video.toString());
         if (stage == huntProgress.getStageFinal()) {
             rightButton.setEnabled(false);
             textView.setText(R.string.stage + stage + ", current stage"); // Shows up as int??? TODO: set up in strings.xml
@@ -209,7 +187,7 @@ public class VideoFragment extends Fragment {
         });
     }
 
-    public Dialog Create_Dialog(final Double latitude, final Double longitude) {
+    public Dialog createDialog(final Double latitude, final Double longitude) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         Double latitude_offset = latitude - target_latitude;
         Double longitude_offset = longitude - target_longitude;
@@ -246,7 +224,7 @@ public class VideoFragment extends Fragment {
         }
         else {
             builder.setTitle(R.string.GPS_Checking_Fail_MSG)
-                    .setMessage("latitude_offset:" +"\n"+ latitude_offset.toString()+"\n"+"longitude_offset:" +"\n"+ longitude_offset.toString())
+                    .setMessage("latitude_offset:" + "\n" + latitude_offset.toString() + "\n" + "longitude_offset:" + "\n" + longitude_offset.toString())
                     .setNegativeButton(R.string.GPS_Checking_Return, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             // User cancelled the dialog
@@ -292,7 +270,7 @@ public class VideoFragment extends Fragment {
 
                         // \n is for new line
                         Toast.makeText(getActivity(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-                        Dialog dialog = Create_Dialog(latitude, longitude);
+                        Dialog dialog = createDialog(latitude, longitude);
                         dialog.show();
                     } else {
                         // can't get location
@@ -336,7 +314,7 @@ public class VideoFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            Photo_View photo_view_fragment = new Photo_View();
+            PhotoView photo_view_fragment = new PhotoView();
             Bundle frag = new Bundle();
             frag.putString("uri", data.getData().toString());
             photo_view_fragment.setArguments(frag);

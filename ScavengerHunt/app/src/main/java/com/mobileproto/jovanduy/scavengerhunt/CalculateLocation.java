@@ -39,34 +39,34 @@ public class CalculateLocation {
 
     public String calculateDirection(){
         String direction ="";
-        Double latitude_offset = lat1 - lat2;
-        Double longitude_offset = lon1 - lon2;
-        if (longitude_offset < 0){
-            if (latitude_offset < 0){
+        Double latitudeOffset = lat1 - lat2;
+        Double longitudeOffset = lon1 - lon2;
+        if (longitudeOffset < 0){
+            if (latitudeOffset < 0){
                 direction = "NE";
             }
-            else if(latitude_offset >0){
+            else if(latitudeOffset >0){
                 direction = "SE";
             }
-            else if(latitude_offset == 0){
+            else if(latitudeOffset == 0){
                 direction = "E";
             }
         }
 
-        else if (longitude_offset>0) {
-            if (latitude_offset < 0) {
+        else if (longitudeOffset>0) {
+            if (latitudeOffset < 0) {
                 direction = "NW";
-            } else if (latitude_offset > 0) {
+            } else if (latitudeOffset > 0) {
                 direction = "SW";
-            } else if (latitude_offset == 0) {
+            } else if (latitudeOffset == 0) {
                 direction = "W";
             }
         }
-        else if (longitude_offset == 0){
-            if (latitude_offset < 0){
+        else if (longitudeOffset == 0){
+            if (latitudeOffset < 0){
                 direction = "N";
                 }
-            else if(latitude_offset >0){
+            else if(latitudeOffset >0){
                 direction = "S";
             }
         }

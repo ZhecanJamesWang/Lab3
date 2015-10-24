@@ -21,8 +21,8 @@ public class MainActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        create_button(rootView, "start_button");
-        create_button(rootView, "guide_button");
+        createButton(rootView, "start_button");
+        createButton(rootView, "guide_button");
         create_webview(rootView);
         return rootView;
 
@@ -38,7 +38,7 @@ public class MainActivityFragment extends Fragment {
         transaction.commit();
     }
 
-    public void create_button(View v, String button) {
+    public void createButton(View v, String button) {
         if (button.equals("start_button")) {
             Log.d(TAG, "start_button");
             Button start_button;
@@ -48,7 +48,9 @@ public class MainActivityFragment extends Fragment {
             start_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    VideoFragment videoFragment = new VideoFragment();
+//                    VideoFragment videoFragment = new VideoFragment();
+                    MainActivity mainActivity = (MainActivity) getActivity();
+                    VideoFragment videoFragment = mainActivity.videoFragment;
                     transitionToFragment(videoFragment);
                 }
             });

@@ -30,8 +30,12 @@ public class HuntProgress { //TODO: actually use this class! Good for MVC
     private boolean pathGotten;
 
     public HuntProgress() {
-        pathGotten = false;
-        onLastStage = false;
+        this.pathGotten = false;
+        this.onLastStage = false;
+        this.latitudes = new ArrayList<>();
+        this.longitudes = new ArrayList<>();
+        this.videos = new ArrayList<>();
+        this.images = new ArrayList<>();
     }
 
     public boolean foundPath() {

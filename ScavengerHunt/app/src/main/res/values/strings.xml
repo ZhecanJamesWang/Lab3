@@ -11,8 +11,8 @@
     <string name="GPS_check">Check GPS</string>
     <string name="left">back</string>
     <string name="right">next</string>
-    <string name="stage">Stage </string>
-    <string name="video"> video</string>
+    <string name="stage">Stage&#160;</string>
+    <string name="video">&#160;video</string>
     <string name="buffering">Buffering...</string>
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

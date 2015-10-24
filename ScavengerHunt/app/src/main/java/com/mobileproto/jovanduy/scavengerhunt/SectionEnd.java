@@ -1,7 +1,5 @@
 package com.mobileproto.jovanduy.scavengerhunt;
 
-import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,10 +9,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 
-public class Section_End extends Fragment {
+public class SectionEnd extends Fragment {
 
 
-    public Section_End() {
+    public SectionEnd() {
         // Required empty public constructor
     }
 
@@ -28,11 +26,11 @@ public class Section_End extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_section__end, container, false);
-        create_webview(rootView);
+        createWebview(rootView);
         createButton(rootView);
         return rootView;
     }
-    public  void create_webview(View view){
+    public  void createWebview(View view){
         WebView mWebView;
         mWebView = (WebView)view.findViewById(R.id.SectEnd_webView);
 

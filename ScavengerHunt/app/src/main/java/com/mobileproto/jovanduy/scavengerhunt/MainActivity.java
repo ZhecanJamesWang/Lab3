@@ -8,13 +8,15 @@
 
 public class MainActivity extends AppCompatActivity {
 
-    public VideoFragment videoFragment = new VideoFragment();
     public HuntProgress huntProgress = new HuntProgress();
+    public VideoFragment videoFragment = new VideoFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        this.huntProgress = huntProgress;
+        this.videoFragment = videoFragment;
         MainActivityFragment mainactivityfragment = new MainActivityFragment();
         transitionToFragment(mainactivityfragment);
     }

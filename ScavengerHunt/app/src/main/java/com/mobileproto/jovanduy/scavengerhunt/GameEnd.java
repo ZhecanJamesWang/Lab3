@@ -12,12 +12,12 @@ import android.view.ViewGroup;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Game_End.OnFragmentInteractionListener} interface
+ * {@link GameEnd.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Game_End#newInstance} factory method to
+ * Use the {@link GameEnd#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Game_End extends Fragment {
+public class GameEnd extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -35,11 +35,11 @@ public class Game_End extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Game_End.
+     * @return A new instance of fragment GameEnd.
      */
     // TODO: Rename and change types and number of parameters
-    public static Game_End newInstance(String param1, String param2) {
-        Game_End fragment = new Game_End();
+    public static GameEnd newInstance(String param1, String param2) {
+        GameEnd fragment = new GameEnd();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -47,7 +47,7 @@ public class Game_End extends Fragment {
         return fragment;
     }
 
-    public Game_End() {
+    public GameEnd() {
         // Required empty public constructor
     }
 
