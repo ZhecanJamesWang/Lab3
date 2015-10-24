@@ -29,7 +29,7 @@ public class HuntProgress { //TODO: actually use this class! Good for MVC
 //    private ArrayList<String> images;
     private boolean pathGotten;
 
-    public HuntProgress(Context context) {
+    public HuntProgress() {
         pathGotten = false;
         onLastStage = false;
     }
@@ -50,16 +50,16 @@ public class HuntProgress { //TODO: actually use this class! Good for MVC
         return currStage;
     }
 
-    public void updateCurrStage(int stage) {
-        currStage = stage;
+    public void updateCurrStage(int num) {
+        currStage += num;
     }
 
     public int getStageFinal() {
         return stageFinal;
     }
 
-    public void updateStageFinal(int stage) {
-        stageFinal = stage;
+    public void updateStageFinal(int num) {
+        stageFinal += num;
     }
 
     public String getUrl(int stage) {

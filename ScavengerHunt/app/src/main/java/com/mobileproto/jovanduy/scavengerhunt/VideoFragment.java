@@ -87,11 +87,13 @@ public class VideoFragment extends Fragment {
     private boolean onLastStage;
     private Uri video;
 
-
+    private HuntProgress huntProgress;
 
     public VideoFragment() {
         this.stageFinal = 0;
         this.currStage = 0;
+        MainActivity mainActivity = (MainActivity) getActivity();
+        huntProgress = mainActivity.huntProgress;
     }
 
     @Override
@@ -110,24 +112,6 @@ public class VideoFragment extends Fragment {
         createGPSButton(view);
         createMenuButton(view);
 
-        leftButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currStage -= 1;
-                updateView(currStage);
-            }
-        });
-
-        rightButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currStage += 1;
-                updateView(currStage);
-            }
-        });
-
-        loadNext(currStage);
-
         if (gpsTestingNearby){
             target_latitude = 42.280929;
             target_longitude = -71.237755;
@@ -136,6 +120,27 @@ public class VideoFragment extends Fragment {
             target_latitude = 39.904211;
             target_longitude = 116.407395;
         }
+
+        leftButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                huntProgress.updateCurrStage(-1);
+                updateView(huntProgress.getCurrStage());
+//                currStage -= 1;
+//                updateView(currStage);
+            }
+        });
+
+        rightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                huntProgress.updateCurrStage(1);
+                updateView(huntProgress.getCurrStage());
+//                currStage += 1;
+//                updateView(currStage);
+            }
+        });
+
     return view;
     }
 
@@ -147,10 +152,15 @@ public class VideoFragment extends Fragment {
         server.getNextInfo(stage, new Callback() {
             @Override
             public void callback(boolean success, double lat, double longi, String vid, boolean isLast) {
-                latitudes.add(stage, lat);
-                longitudes.add(stage, longi);
-                videos.add(stage, vid);
-                onLastStage = isLast;
+                huntProgress.addLatitude(lat);
+                huntProgress.addLongitude(longi);
+                huntProgress.addUrl(vid);
+                huntProgress.setOnLastStage(isLast);
+
+//                latitudes.add(stage, lat);
+//                longitudes.add(stage, longi);
+//                videos.add(stage, vid);
+//                onLastStage = isLast;
                 updateView(stage);
 
             }
@@ -161,8 +171,9 @@ public class VideoFragment extends Fragment {
      * @param stage stage from which to use in the video view
      */
     public void updateView(int stage) {
-        video = Uri.parse(urlBase + videos.get(stage));
-        if (stage == stageFinal) {
+//        video = Uri.parse(urlBase + videos.get(stage));
+        video = Uri.parse(urlBase + huntProgress.getUrl(stage));
+        if (stage == huntProgress.getStageFinal()) {
             rightButton.setEnabled(false);
             textView.setText(R.string.stage + stage + ", current stage"); // Shows up as int??? TODO: set up in strings.xml
         } else {
