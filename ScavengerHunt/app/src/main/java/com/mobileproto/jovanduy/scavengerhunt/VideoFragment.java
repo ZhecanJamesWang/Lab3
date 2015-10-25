@@ -33,7 +33,6 @@ import java.util.ArrayList;
 
 public class VideoFragment extends Fragment {
 
-    // GPSTracker class
     GPSTracker gps;
     private Boolean gpsTestingNearby = true;
     private String TAG = "VIDEO FRAGMENT";
@@ -158,6 +157,7 @@ public class VideoFragment extends Fragment {
         if (stage == huntProgress.getStageFinal()) {
             rightButton.setEnabled(false);
             textView.setText(getString(R.string.stage) + stage + ", current stage"); // Shows up as int??? TODO: set up in strings.xml
+            checkGps.setText(getString(R.string.GPS_check));
         } else {
             rightButton.setEnabled(true);
             textView.setText(getString(R.string.stage) + stage + ", previous stage");
@@ -214,17 +214,6 @@ public class VideoFragment extends Fragment {
                             dialog.dismiss();
                         }
                     });
-//            if (currStage == stageFinal) {
-//                if(!onLastStage) {
-//                    stageFinal += 1;
-//                    currStage += 1;
-//                    loadNext(stageFinal);
-//                } else {
-//                    Log.d("YOU'RE DONE!!", "YOU'RE DONE!!");
-//                }
-//            } else {
-////                    server.getUploadedImage(currStage,);
-//            }
 
             return builder.create();
         }
@@ -267,24 +256,29 @@ public class VideoFragment extends Fragment {
                 @Override
                 public void onClick(View arg0) {
 
-                    // check if GPS enabled
-                    if (gps.canGetLocation()) {
+                    if (huntProgress.getCurrStage() == huntProgress.getStageFinal()) {
+                        // check if GPS enabled
+                        if (gps.canGetLocation()) {
 
-                        double latitude = gps.getLatitude();
-                        double longitude = gps.getLongitude();
+                            double latitude = gps.getLatitude();
+                            double longitude = gps.getLongitude();
 
 
-                        // \n is for new line
-                        Toast.makeText(getActivity(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-                        Dialog dialog = createDialog(latitude, longitude);
-                        dialog.show();
+                            // \n is for new line
+                            Toast.makeText(getActivity(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+                            Dialog dialog = createDialog(latitude, longitude);
+                            dialog.show();
+                        } else {
+                            // can't get location
+                            // GPS or Network is not enabled
+                            // Ask user to enable GPS/network in settings
+                            gps.showSettingsAlert();
+                        }
                     } else {
-                        // can't get location
-                        // GPS or Network is not enabled
-                        // Ask user to enable GPS/network in settings
-                        gps.showSettingsAlert();
+                        double lat = huntProgress.getLatitude(huntProgress.getCurrStage());
+                        double longi = huntProgress.getLongitude(huntProgress.getCurrStage());
+                        Toast.makeText(getActivity(), Double.toString(lat) + Double.toString(longi), Toast.LENGTH_LONG).show();
                     }
-
                 }
             });
         }
