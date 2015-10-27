@@ -1,7 +1,7 @@
 package com.mobileproto.jovanduy.scavengerhunt;
 
 /**
- * Created by Jordan on 10/21/15.
+ * Interface for callback from Volley HTTP request to GET image information
  */
 public interface GetImageCallback {
     public void callback(boolean success, String imageKey);
