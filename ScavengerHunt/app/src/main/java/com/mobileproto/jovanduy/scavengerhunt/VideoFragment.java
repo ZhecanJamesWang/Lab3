@@ -35,7 +35,7 @@ public class VideoFragment extends Fragment {
 
     // GPSTracker class
     GPSTracker gps;
-    private Boolean gpsTestingNearby = true;
+    private Boolean gpsTestingNearby = false;
     private String TAG = "VIDEO FRAGMENT";
     private String mCurrentPhotoPath;
     static final int REQUEST_TAKE_PHOTO = 1;
@@ -89,14 +89,14 @@ public class VideoFragment extends Fragment {
         createGPSButton(view);
         createMenuButton(view);
 
-//        if (gpsTestingNearby){
-//            target_latitude = 42.280929;
-//            target_longitude = -71.237755;
-//        }
-//        else{
-//            target_latitude = 39.904211;
-//            target_longitude = 116.407395;
-//        }
+        if (gpsTestingNearby){
+            target_latitude = 42.280929;
+            target_longitude = -71.237755;
+        }
+        else{
+            target_latitude = 39.904211;
+            target_longitude = 116.407395;
+        }
 
         leftButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,10 +193,10 @@ public class VideoFragment extends Fragment {
 
     public Dialog createDialog(final Double latitude, final Double longitude) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//        Double latitude_offset = latitude - target_latitude;
-//        Double longitude_offset = longitude - target_longitude;
-        Double latitude_offset = 9.0;
-        Double longitude_offset = 9.0;
+        Double latitude_offset = latitude - target_latitude;
+        Double longitude_offset = longitude - target_longitude;
+//        Double latitude_offset =11.0;
+//        Double longitude_offset = 11.0;
         if (Math.abs(latitude_offset) < 10 && Math.abs(longitude_offset) < 10) {
             builder.setMessage(R.string.GPS_Checking_Success_MSG)
                     .setPositiveButton(R.string.GPS_Checking_Camera, new DialogInterface.OnClickListener() {
@@ -227,7 +227,8 @@ public class VideoFragment extends Fragment {
 //            }
 
             return builder.create();
-        }
+
+    }
         else {
             builder.setTitle(R.string.GPS_Checking_Fail_MSG)
                     .setMessage("latitude_offset:" + "\n" + latitude_offset.toString() + "\n" + "longitude_offset:" + "\n" + longitude_offset.toString())
@@ -255,6 +256,7 @@ public class VideoFragment extends Fragment {
             return builder.create();
         }
     }
+
 
 
     public void createGPSButton(View v){
