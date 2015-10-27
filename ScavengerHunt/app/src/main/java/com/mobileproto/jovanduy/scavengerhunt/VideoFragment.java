@@ -86,16 +86,8 @@ public class VideoFragment extends Fragment {
         longitudes = new ArrayList<>();
         videos = new ArrayList<>();
         createGPSButton(view);
-        createMenuButton(view);
 
-//        if (gpsTestingNearby){
-//            target_latitude = 42.280929;
-//            target_longitude = -71.237755;
-//        }
-//        else{
-//            target_latitude = 39.904211;
-//            target_longitude = 116.407395;
-//        }
+
 
         leftButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,9 +142,11 @@ public class VideoFragment extends Fragment {
      * @param stage stage from which to use in the video view
      */
     public void updateView(int stage) {
+        target_longitude = huntProgress.getLongitude(stage);
+        target_latitude = huntProgress.getLatitude(stage);
 //        video = Uri.parse(urlBase + videos.get(stage));
-        target_latitude = huntProgress.getLatitude(huntProgress.getCurrStage());
-        target_longitude = huntProgress.getLongitude(huntProgress.getCurrStage());
+//        target_latitude = huntProgress.getLatitude(huntProgress.getCurrStage());
+//        target_longitude = huntProgress.getLongitude(huntProgress.getCurrStage());
         video = Uri.parse(huntProgress.getUrl(stage));
         if (stage == huntProgress.getStageFinal()) {
             rightButton.setEnabled(false);
@@ -192,12 +186,25 @@ public class VideoFragment extends Fragment {
     }
 
     public Dialog createDialog(final Double latitude, final Double longitude) {
+//        if (gpsTestingNearby){
+//            target_latitude = 42.280929;
+//            target_longitude = -71.237755;
+//        }
+//        else{
+//            target_latitude = 39.904211;
+//            target_longitude = 116.407395;
+//        }
+
+        Log.d(TAG, String.valueOf(target_longitude));
+        Log.d(TAG, String.valueOf(target_latitude));
+
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//        Double latitude_offset = latitude - target_latitude;
-//        Double longitude_offset = longitude - target_longitude;
-        Double latitude_offset = 9.0;
-        Double longitude_offset = 9.0;
-        if (Math.abs(latitude_offset) < 10 && Math.abs(longitude_offset) < 10) {
+        Double latitude_offset = latitude - target_latitude;
+        Double longitude_offset = longitude - target_longitude;
+        latitude_offset =0.0;
+        longitude_offset = 0.0;
+        if ((Math.abs(latitude_offset) < 0.0001) && (Math.abs(longitude_offset) < 0.0001)) {
+            Log.d(TAG, "nearby");
             builder.setMessage(R.string.GPS_Checking_Success_MSG)
                     .setPositiveButton(R.string.GPS_Checking_Camera, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -216,8 +223,9 @@ public class VideoFragment extends Fragment {
                     });
 
             return builder.create();
-        }
-        else {
+
+        } else {
+            Log.d(TAG, "far");
             builder.setTitle(R.string.GPS_Checking_Fail_MSG)
                     .setMessage("latitude_offset:" + "\n" + latitude_offset.toString() + "\n" + "longitude_offset:" + "\n" + longitude_offset.toString())
                     .setNegativeButton(R.string.GPS_Checking_Return, new DialogInterface.OnClickListener() {
@@ -244,6 +252,7 @@ public class VideoFragment extends Fragment {
             return builder.create();
         }
     }
+
 
 
     public void createGPSButton(View v){
@@ -279,26 +288,6 @@ public class VideoFragment extends Fragment {
                         double longi = huntProgress.getLongitude(huntProgress.getCurrStage());
                         Toast.makeText(getActivity(), Double.toString(lat) + Double.toString(longi), Toast.LENGTH_LONG).show();
                     }
-                }
-            });
-        }
-
-    public void createMenuButton(View v){
-            Log.d(TAG, "back_menu_button");
-            Button back_menu_button;
-            Log.d(TAG,"0");
-            back_menu_button = (Button) v.findViewById(R.id.back_menu_button);
-            Log.d(TAG,"1");
-            back_menu_button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG,"2");
-                    android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
-                    android.support.v4.app.FragmentTransaction transaction = fm.beginTransaction();
-                    MainActivityFragment mainactivityfragment = new MainActivityFragment();
-                    transaction.replace(R.id.container, mainactivityfragment);
-                    transaction.commit();
-
                 }
             });
         }

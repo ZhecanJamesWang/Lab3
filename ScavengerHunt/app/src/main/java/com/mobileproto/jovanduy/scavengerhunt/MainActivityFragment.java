@@ -16,6 +16,7 @@ import android.widget.Toast;
 public class MainActivityFragment extends Fragment {
     private VideoFragment videoFragment;
     private String TAG = "main_activity_fragment";
+    private Button startButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -23,7 +24,7 @@ public class MainActivityFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         createButton(rootView, "start_button");
         createButton(rootView, "guide_button");
-        create_webview(rootView);
+        createWebview(rootView);
         return rootView;
 
     }
@@ -40,12 +41,22 @@ public class MainActivityFragment extends Fragment {
 
     public void createButton(View v, String button) {
         if (button.equals("start_button")) {
-            Log.d(TAG, "start_button");
-            Button start_button;
-            start_button = (
+            Log.d(TAG, "startButton");
+            startButton = (
                     Button) v.findViewById(R.id.start_button);
-
-            start_button.setOnClickListener(new View.OnClickListener() {
+            MainActivity mainActivity = (MainActivity) getActivity();
+            HuntProgress huntProgress = mainActivity.huntProgress;
+            if (!huntProgress.isOnLastStage() && huntProgress.getStageFinal() > 0) {
+                Log.d("Resume", String.valueOf(huntProgress.isOnLastStage()));
+                Log.d("Resume", String.valueOf(huntProgress.getStageFinal()));
+                startButton.setText(R.string.resume);
+            } else {
+                startButton.setText(R.string.start_game);
+                Log.d("Reset", String.valueOf(huntProgress.isOnLastStage()));
+                Log.d("Reset", String.valueOf(huntProgress.getStageFinal()));
+                huntProgress.reset();
+            }
+            startButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 //                    VideoFragment videoFragment = new VideoFragment();
@@ -62,12 +73,12 @@ public class MainActivityFragment extends Fragment {
             guide_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getActivity(), "TBD", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.instruction, Toast.LENGTH_LONG).show();
                 }
             });
         }
     }
-    public  void create_webview(View view){
+    public  void createWebview(View view){
         WebView mWebView;
         mWebView = (WebView)view.findViewById(R.id.start_webview);
 
@@ -79,5 +90,8 @@ public class MainActivityFragment extends Fragment {
         webSettings.setLoadWithOverviewMode(true);
         String link ="http://scavengerhuntfilm.com/wp-content/themes/scavenger-hunt/img/logo.jpg";
         mWebView.loadUrl(link);
+    }
+    public Button returnStartButton() {
+        return startButton;
     }
 }
