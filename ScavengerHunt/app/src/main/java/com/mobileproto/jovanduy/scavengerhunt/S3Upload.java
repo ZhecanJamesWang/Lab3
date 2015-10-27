@@ -79,8 +79,6 @@ public class S3Upload extends AsyncTask<Void, Integer, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         dialog.dismiss();
-        SectionEnd sectionEndFragment = new SectionEnd();
-        transitionToFragment(sectionEndFragment);
         Server server = new Server(context);
         server.postImage(uuid.toString(), stage + 1, new PutCallback() {
             @Override
@@ -88,6 +86,14 @@ public class S3Upload extends AsyncTask<Void, Integer, Void> {
                 Log.d("IMAGE UPLOADED?", statusCode.toString());
             }
         });
+        MainActivity mainActivity = (MainActivity) activity;
+        if (mainActivity.videoFragment.getHuntProgress().isOnLastStage()) {
+            GameEnd gameEnd = new GameEnd();
+            transitionToFragment(gameEnd);
+        } else {
+            SectionEnd sectionEndFragment = new SectionEnd();
+            transitionToFragment(sectionEndFragment);
+        }
     }
 
     public void transitionToFragment(Fragment fragment) {
