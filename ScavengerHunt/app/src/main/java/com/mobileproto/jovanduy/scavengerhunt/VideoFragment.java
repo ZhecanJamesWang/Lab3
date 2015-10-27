@@ -28,9 +28,6 @@ import android.widget.VideoView;
 
 import java.util.ArrayList;
 
-
-
-
 public class VideoFragment extends Fragment {
 
     GPSTracker gps;
@@ -51,22 +48,12 @@ public class VideoFragment extends Fragment {
     private Button checkGps;
     private TextView textView;
 
-    private int currStage;
-    private int stageFinal;
     private Server server;
-    private ArrayList<Double> latitudes;
-    private ArrayList<Double> longitudes;
-    private ArrayList<String> videos;
-    private ArrayList<String> images;
-    private String urlBase = "https://s3.amazonaws.com/olin-mobile-proto/";
-    private boolean onLastStage;
     private Uri video;
 
     private HuntProgress huntProgress;
 
     public VideoFragment() {
-        this.stageFinal = 0;
-        this.currStage = 0;
 //        MainActivity mainActivity = (MainActivity) getActivity();
 //        huntProgress = mainActivity.huntProgress;
         this.huntProgress = new HuntProgress();
@@ -82,12 +69,7 @@ public class VideoFragment extends Fragment {
         checkGps = (Button) view.findViewById(R.id.gps_check_btn);
         textView = (TextView) view.findViewById(R.id.text);
         server = new Server(getContext());
-        latitudes = new ArrayList<>();
-        longitudes = new ArrayList<>();
-        videos = new ArrayList<>();
         createGPSButton(view);
-
-
 
         leftButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,9 +151,7 @@ public class VideoFragment extends Fragment {
         }
 
         pDialog = new ProgressDialog(getContext());
-//        pDialog.setTitle("Stage " + currStage + " video");
-//        pDialog.setMessage("Buffering..."); //TODO getActivity.getString....
-        pDialog.setTitle(getString(R.string.stage) + stage + getString(R.string.video)); //HELP! Error with strings???
+        pDialog.setTitle(getString(R.string.stage) + stage + getString(R.string.video));
         pDialog.setMessage(getString(R.string.buffering));
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
@@ -257,8 +237,6 @@ public class VideoFragment extends Fragment {
             return builder.create();
         }
     }
-
-
 
     public void createGPSButton(View v){
             final Button GPS_button;//TODO: move these to the top

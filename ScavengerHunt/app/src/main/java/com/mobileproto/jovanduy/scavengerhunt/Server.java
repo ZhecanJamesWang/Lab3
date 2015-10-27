@@ -74,6 +74,11 @@ public class Server {
         queue.add(request);
     }
 
+    /**
+     * UPDATE: Not needed because no need of
+     * @param stage
+     * @param callback
+     */
     public void getUploadedImage(int stage, final GetImageCallback callback) {
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
@@ -104,6 +109,12 @@ public class Server {
         queue.add(request);
     }
 
+    /**
+     * Post image information to sever
+     * @param imageKey string containing UUID of image
+     * @param location stage (indexing from 1) of photo
+     * @param callback to allow for implementation later
+     */
     public void postImage(String imageKey, int location, final PutCallback callback) {
         JSONObject body = new JSONObject();
         try {

@@ -13,7 +13,6 @@ public class HuntProgress {
     private ArrayList<Double> latitudes;
     private ArrayList<Double> longitudes;
     private ArrayList<String> videos;
-    private ArrayList<String> images;
     private String urlBase = "https://s3.amazonaws.com/olin-mobile-proto/";
     private boolean onLastStage;
 
@@ -22,7 +21,6 @@ public class HuntProgress {
         this.latitudes = new ArrayList<>();
         this.longitudes = new ArrayList<>();
         this.videos = new ArrayList<>();
-        this.images = new ArrayList<>();
     }
 
     /**
@@ -124,14 +122,6 @@ public class HuntProgress {
         longitudes.add(longitude);
     }
 
-    public void setImage(String image) {
-//        images.add(image)
-        images.set(currStage, image);
-    }
-
-    public String getImage(int stage) {
-        return images.get(stage);
-    }
 
     /**
      * resets all of HuntProgress's fields to restart the scavenger hunt
@@ -143,6 +133,5 @@ public class HuntProgress {
         latitudes = new ArrayList<>();
         longitudes = new ArrayList<>();
         videos = new ArrayList<>();
-        images = new ArrayList<>();
     }
 }

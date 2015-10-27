@@ -1,15 +1,12 @@
-    package com.mobileproto.jovanduy.scavengerhunt;
+package com.mobileproto.jovanduy.scavengerhunt;
 
-    import android.support.v7.app.AppCompatActivity;
-    import android.support.v4.app.Fragment;
-    import android.os.Bundle;
-    import android.util.Log;
-    import android.view.Menu;
-    import android.view.MenuItem;
-    import android.view.View;
-    import android.widget.Button;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
-    public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     public VideoFragment videoFragment = new VideoFragment();
     public MainActivityFragment mainactivityfragment = new MainActivityFragment();
@@ -46,6 +43,10 @@
         }
     }
 
+    /**
+     * transitions to a given fragment
+     * @param fragment fragment to transition to
+     */
     public void transitionToFragment(Fragment fragment) {
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction transaction = fm.beginTransaction();
