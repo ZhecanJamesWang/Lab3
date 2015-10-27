@@ -4,6 +4,8 @@ package com.mobileproto.jovanduy.scavengerhunt;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import com.amazonaws.auth.AWSCredentials;
@@ -30,11 +32,15 @@ public class S3Upload extends AsyncTask<Void, Integer, Void> {
     private File file;
     private UUID uuid;
     private ProgressDialog dialog;
+    private int stage;
+    private FragmentActivity activity;
 
-    public S3Upload(Context context, File file, UUID uuid) {
+    public S3Upload(Context context, File file, UUID uuid, int stage, FragmentActivity activity) {
         this.context = context;
         this.file = file;
         this.uuid = uuid;
+        this.stage = stage;
+        this.activity = activity;
     }
 
     @Override
@@ -73,5 +79,27 @@ public class S3Upload extends AsyncTask<Void, Integer, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         dialog.dismiss();
+        Server server = new Server(context);
+        server.postImage(uuid.toString(), stage + 1, new PutCallback() {
+            @Override
+            public void callbackPut(boolean success, String statusCode) {
+                Log.d("IMAGE UPLOADED?", statusCode.toString());
+            }
+        });
+        MainActivity mainActivity = (MainActivity) activity;
+        if (mainActivity.videoFragment.getHuntProgress().isOnLastStage()) {
+            GameEnd gameEnd = new GameEnd();
+            transitionToFragment(gameEnd);
+        } else {
+            SectionEnd sectionEndFragment = new SectionEnd();
+            transitionToFragment(sectionEndFragment);
+        }
+    }
+
+    public void transitionToFragment(Fragment fragment) {
+        android.support.v4.app.FragmentManager fm = activity.getSupportFragmentManager();//TODO: change the import
+        android.support.v4.app.FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.container, fragment);
+        transaction.commit();
     }
 }

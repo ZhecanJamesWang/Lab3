@@ -114,7 +114,7 @@ public class Server {
         }
 
         JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.PUT,
+                Request.Method.POST,
                 url + "userdata/" + appID,
                 body,
                 new Response.Listener<JSONObject>() {
@@ -132,8 +132,8 @@ public class Server {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("Error!", error.getMessage());
-                        callback.callbackPut(false, null);
+                        Log.e("Error!", error.getMessage() + " ERROR!");
+                        callback.callbackPut(false, "error :(");
                     }
                 }
         );

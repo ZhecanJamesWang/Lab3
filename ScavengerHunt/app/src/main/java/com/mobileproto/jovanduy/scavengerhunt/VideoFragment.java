@@ -33,9 +33,8 @@ import java.util.ArrayList;
 
 public class VideoFragment extends Fragment {
 
-    // GPSTracker class
     GPSTracker gps;
-    private Boolean gpsTestingNearby = false;
+    private Boolean gpsTestingNearby = true;
     private String TAG = "VIDEO FRAGMENT";
     private String mCurrentPhotoPath;
     static final int REQUEST_TAKE_PHOTO = 1;
@@ -87,16 +86,8 @@ public class VideoFragment extends Fragment {
         longitudes = new ArrayList<>();
         videos = new ArrayList<>();
         createGPSButton(view);
-        createMenuButton(view);
 
-        if (gpsTestingNearby){
-            target_latitude = 42.280929;
-            target_longitude = -71.237755;
-        }
-        else{
-            target_latitude = 39.904211;
-            target_longitude = 116.407395;
-        }
+
 
         leftButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,13 +142,16 @@ public class VideoFragment extends Fragment {
      * @param stage stage from which to use in the video view
      */
     public void updateView(int stage) {
+        target_longitude = huntProgress.getLongitude(stage);
+        target_latitude = huntProgress.getLatitude(stage);
 //        video = Uri.parse(urlBase + videos.get(stage));
-        target_latitude = huntProgress.getLatitude(huntProgress.getCurrStage());
-        target_longitude = huntProgress.getLongitude(huntProgress.getCurrStage());
+//        target_latitude = huntProgress.getLatitude(huntProgress.getCurrStage());
+//        target_longitude = huntProgress.getLongitude(huntProgress.getCurrStage());
         video = Uri.parse(huntProgress.getUrl(stage));
         if (stage == huntProgress.getStageFinal()) {
             rightButton.setEnabled(false);
             textView.setText(getString(R.string.stage) + stage + ", current stage"); // Shows up as int??? TODO: set up in strings.xml
+            checkGps.setText(getString(R.string.GPS_check));
         } else {
             rightButton.setEnabled(true);
             textView.setText(getString(R.string.stage) + stage + ", previous stage");
@@ -192,12 +186,25 @@ public class VideoFragment extends Fragment {
     }
 
     public Dialog createDialog(final Double latitude, final Double longitude) {
+//        if (gpsTestingNearby){
+//            target_latitude = 42.280929;
+//            target_longitude = -71.237755;
+//        }
+//        else{
+//            target_latitude = 39.904211;
+//            target_longitude = 116.407395;
+//        }
+
+        Log.d(TAG, String.valueOf(target_longitude));
+        Log.d(TAG, String.valueOf(target_latitude));
+
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         Double latitude_offset = latitude - target_latitude;
         Double longitude_offset = longitude - target_longitude;
-//        Double latitude_offset =11.0;
-//        Double longitude_offset = 11.0;
-        if (Math.abs(latitude_offset) < 10 && Math.abs(longitude_offset) < 10) {
+        latitude_offset =0.0;
+        longitude_offset = 0.0;
+        if ((Math.abs(latitude_offset) < 0.0001) && (Math.abs(longitude_offset) < 0.0001)) {
+            Log.d(TAG, "nearby");
             builder.setMessage(R.string.GPS_Checking_Success_MSG)
                     .setPositiveButton(R.string.GPS_Checking_Camera, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -214,22 +221,11 @@ public class VideoFragment extends Fragment {
                             dialog.dismiss();
                         }
                     });
-//            if (currStage == stageFinal) {
-//                if(!onLastStage) {
-//                    stageFinal += 1;
-//                    currStage += 1;
-//                    loadNext(stageFinal);
-//                } else {
-//                    Log.d("YOU'RE DONE!!", "YOU'RE DONE!!");
-//                }
-//            } else {
-////                    server.getUploadedImage(currStage,);
-//            }
 
             return builder.create();
 
-    }
-        else {
+        } else {
+            Log.d(TAG, "far");
             builder.setTitle(R.string.GPS_Checking_Fail_MSG)
                     .setMessage("latitude_offset:" + "\n" + latitude_offset.toString() + "\n" + "longitude_offset:" + "\n" + longitude_offset.toString())
                     .setNegativeButton(R.string.GPS_Checking_Return, new DialogInterface.OnClickListener() {
@@ -269,44 +265,29 @@ public class VideoFragment extends Fragment {
                 @Override
                 public void onClick(View arg0) {
 
-                    // check if GPS enabled
-                    if (gps.canGetLocation()) {
+                    if (huntProgress.getCurrStage() == huntProgress.getStageFinal()) {
+                        // check if GPS enabled
+                        if (gps.canGetLocation()) {
 
-                        double latitude = gps.getLatitude();
-                        double longitude = gps.getLongitude();
+                            double latitude = gps.getLatitude();
+                            double longitude = gps.getLongitude();
 
 
-                        // \n is for new line
-                        Toast.makeText(getActivity(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-                        Dialog dialog = createDialog(latitude, longitude);
-                        dialog.show();
+                            // \n is for new line
+                            Toast.makeText(getActivity(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+                            Dialog dialog = createDialog(latitude, longitude);
+                            dialog.show();
+                        } else {
+                            // can't get location
+                            // GPS or Network is not enabled
+                            // Ask user to enable GPS/network in settings
+                            gps.showSettingsAlert();
+                        }
                     } else {
-                        // can't get location
-                        // GPS or Network is not enabled
-                        // Ask user to enable GPS/network in settings
-                        gps.showSettingsAlert();
+                        double lat = huntProgress.getLatitude(huntProgress.getCurrStage());
+                        double longi = huntProgress.getLongitude(huntProgress.getCurrStage());
+                        Toast.makeText(getActivity(), Double.toString(lat) + Double.toString(longi), Toast.LENGTH_LONG).show();
                     }
-
-                }
-            });
-        }
-
-    public void createMenuButton(View v){
-            Log.d(TAG, "back_menu_button");
-            Button back_menu_button;
-            Log.d(TAG,"0");
-            back_menu_button = (Button) v.findViewById(R.id.back_menu_button);
-            Log.d(TAG,"1");
-            back_menu_button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG,"2");
-                    android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
-                    android.support.v4.app.FragmentTransaction transaction = fm.beginTransaction();
-                    MainActivityFragment mainactivityfragment = new MainActivityFragment();
-                    transaction.replace(R.id.container, mainactivityfragment);
-                    transaction.commit();
-
                 }
             });
         }

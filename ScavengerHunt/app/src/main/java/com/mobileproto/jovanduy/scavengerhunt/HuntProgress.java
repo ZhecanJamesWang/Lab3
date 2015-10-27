@@ -98,4 +98,14 @@ public class HuntProgress {
     public String getImage(int stage) {
         return images.get(stage);
     }
+    public void reset(){
+        currStage =0;
+        stageFinal = 0;
+        pathGotten = false;
+        onLastStage = false;
+        latitudes = new ArrayList<>();
+        longitudes = new ArrayList<>();
+        videos = new ArrayList<>();
+        images = new ArrayList<>();
+    }
 }
