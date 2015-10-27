@@ -76,8 +76,6 @@ public class VideoFragment extends Fragment {
             public void onClick(View v) {
                 huntProgress.updateCurrStage(-1);
                 updateView(huntProgress.getCurrStage());
-//                currStage -= 1;
-//                updateView(currStage);
             }
         });
 
@@ -86,8 +84,6 @@ public class VideoFragment extends Fragment {
             public void onClick(View v) {
                 huntProgress.updateCurrStage(1);
                 updateView(huntProgress.getCurrStage());
-//                currStage += 1;
-//                updateView(currStage);
             }
         });
         loadNext(huntProgress.getCurrStage());
@@ -115,10 +111,6 @@ public class VideoFragment extends Fragment {
                 huntProgress.addUrl(vid);
                 huntProgress.setOnLastStage(isLast);
 
-//                latitudes.add(stage, lat);
-//                longitudes.add(stage, longi);
-//                videos.add(stage, vid);
-//                onLastStage = isLast;
                 updateView(stage);
 
             }
@@ -131,18 +123,15 @@ public class VideoFragment extends Fragment {
     public void updateView(int stage) {
         target_longitude = huntProgress.getLongitude(stage);
         target_latitude = huntProgress.getLatitude(stage);
-//        video = Uri.parse(urlBase + videos.get(stage));
-//        target_latitude = huntProgress.getLatitude(huntProgress.getCurrStage());
-//        target_longitude = huntProgress.getLongitude(huntProgress.getCurrStage());
         video = Uri.parse(huntProgress.getUrl(stage));
         if (stage == huntProgress.getStageFinal()) {
             rightButton.setEnabled(false);
-            textView.setText(getString(R.string.stage) + stage + ", current stage"); // Shows up as int??? TODO: set up in strings.xml
+            textView.setText(getString(R.string.stage) + stage + getString(R.string.current_stage));
             checkGps.setText(getString(R.string.GPS_check));
         } else {
             rightButton.setEnabled(true);
-            textView.setText(getString(R.string.stage) + stage + ", previous stage");
-            checkGps.setText("View image\n& GPS");
+            textView.setText(getString(R.string.stage) + stage + getString(R.string.previous_stage));
+            checkGps.setText(getString(R.string.GPS_view));
         }
         if (stage == 0) {
             leftButton.setEnabled(false);
@@ -186,8 +175,7 @@ public class VideoFragment extends Fragment {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         Double latitude_offset = latitude - target_latitude;
         Double longitude_offset = longitude - target_longitude;
-        latitude_offset =0.0;
-        longitude_offset = 0.0;
+
         if ((Math.abs(latitude_offset) < 0.0001) && (Math.abs(longitude_offset) < 0.0001)) {
             Log.d(TAG, "nearby");
             builder.setMessage(R.string.GPS_Checking_Success_MSG)
