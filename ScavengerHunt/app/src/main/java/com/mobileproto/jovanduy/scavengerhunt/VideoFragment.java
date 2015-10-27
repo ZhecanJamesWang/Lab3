@@ -1,7 +1,7 @@
 package com.mobileproto.jovanduy.scavengerhunt;
 
 /**
- * Created by root on 10/8/15.
+ * Fragment for displaying video view
  */
 
 import android.app.Activity;
@@ -112,9 +112,14 @@ public class VideoFragment extends Fragment {
     return view;
     }
 
+    /**
+     * allows huntProgress to be easily accessed by other fragments
+     * @return huntProgess (holding all data about progress in scavenger hunt)
+     */
     public HuntProgress getHuntProgress() {
         return huntProgress;
     }
+
     /**
      * Load the info for the next stage and then update the view based on that new stage
      * @param stage stage in scavenger hunt from which to get info
