@@ -11,7 +11,6 @@
 
     public class MainActivity extends AppCompatActivity {
 
-    public HuntProgress huntProgress = new HuntProgress();
     public VideoFragment videoFragment = new VideoFragment();
     public MainActivityFragment mainactivityfragment = new MainActivityFragment();
 
@@ -37,16 +36,6 @@
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()){
             case R.id.main_menu:
-                if (!videoFragment.getHuntProgress().isOnLastStage() && videoFragment.getHuntProgress().getStageFinal() > 0) {
-                    Log.d("Resume", String.valueOf(videoFragment.getHuntProgress().isOnLastStage()));
-                    Log.d("Resume", String.valueOf(videoFragment.getHuntProgress().getStageFinal()));
-                    mainactivityfragment.returnStartButton().setText(R.string.resume);
-                } else {
-                    mainactivityfragment.returnStartButton().setText(R.string.start_game);
-                    Log.d("Reset", String.valueOf(videoFragment.getHuntProgress().isOnLastStage()));
-                    Log.d("Reset", String.valueOf(videoFragment.getHuntProgress().getStageFinal()));
-                    videoFragment.getHuntProgress().reset();
-                }
                 transitionToFragment(mainactivityfragment);
                 return true;
             case R.id.videos:

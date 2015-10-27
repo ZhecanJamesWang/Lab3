@@ -42,26 +42,14 @@ public class MainActivityFragment extends Fragment {
     public void createButton(View v, String button) {
         if (button.equals("start_button")) {
             Log.d(TAG, "startButton");
-            startButton = (
-                    Button) v.findViewById(R.id.start_button);
-            MainActivity mainActivity = (MainActivity) getActivity();
-            HuntProgress huntProgress = mainActivity.huntProgress;
-            if (!huntProgress.isOnLastStage() && huntProgress.getStageFinal() > 0) {
-                Log.d("Resume", String.valueOf(huntProgress.isOnLastStage()));
-                Log.d("Resume", String.valueOf(huntProgress.getStageFinal()));
-                startButton.setText(R.string.resume);
-            } else {
-                startButton.setText(R.string.start_game);
-                Log.d("Reset", String.valueOf(huntProgress.isOnLastStage()));
-                Log.d("Reset", String.valueOf(huntProgress.getStageFinal()));
-                huntProgress.reset();
-            }
+            startButton = (Button) v.findViewById(R.id.start_button);
             startButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 //                    VideoFragment videoFragment = new VideoFragment();
                     MainActivity mainActivity = (MainActivity) getActivity();
                     VideoFragment videoFragment = mainActivity.videoFragment;
+                    videoFragment.getHuntProgress().reset();
                     transitionToFragment(videoFragment);
                 }
             });
