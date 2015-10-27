@@ -13,9 +13,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+
 import java.io.File;
 import java.net.URI;
 import java.util.UUID;
+import java.util.concurrent.TransferQueue;
 
 public class PhotoView extends Fragment {
 
@@ -73,9 +78,25 @@ public class PhotoView extends Fragment {
 //                URI uriURI = URI.create(uri.toString());
                 File file = new File(uri.getPath());
                 MainActivity mainActivity = (MainActivity) getActivity();
+                S3Service s3Service = new S3Service(getContext());
+                s3Service.uploadFile(uuid.toString(), file);
+                Server server = new Server(getContext());
+                server.postImage(uuid.toString(), mainActivity.videoFragment.getHuntProgress().getCurrStage() + 1, new PutCallback() {
+                    @Override
+                    public void callbackPut(boolean success, String statusCode) {
+                        Log.d("IMAGE UPLOADED?", statusCode.toString());
+                    }
+                });
+                if (mainActivity.videoFragment.getHuntProgress().isOnLastStage()) {
+                    GameEnd gameEnd = new GameEnd();
+                    transitionToFragment(gameEnd);
+                } else {
+                    SectionEnd sectionEndFragment = new SectionEnd();
+                    transitionToFragment(sectionEndFragment);
+                }
 
-                S3Upload s3Upload = new S3Upload(getContext(), file, uuid, mainActivity.videoFragment.getHuntProgress().getCurrStage(), getActivity());
-                s3Upload.execute();
+//                S3Upload s3Upload = new S3Upload(getContext(), file, uuid, mainActivity.videoFragment.getHuntProgress().getCurrStage(), getActivity());
+//                s3Upload.execute();
 //                SectionEnd sectionEndFragment = new SectionEnd();
 //                transitionToFragment(sectionEndFragment);
             }
