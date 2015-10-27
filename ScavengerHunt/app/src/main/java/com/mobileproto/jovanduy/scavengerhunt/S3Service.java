@@ -18,7 +18,7 @@ import java.net.URL;
 import java.util.Date;
 
 /**
- * Created by Jordan on 10/26/15.
+ * Class to upload photos using Transfer Utility to S3
  */
 public class S3Service {
     static final String BUCKET_NAME = "olin-mobile-proto";

@@ -20,7 +20,7 @@ import java.io.File;
 import java.util.UUID;
 
 /**
- * Created by Jordan on 10/20/15.
+ * Class to upload photos using AsynchTask to S3
  */
 public class S3Upload extends AsyncTask<Void, Integer, Void> {
 
